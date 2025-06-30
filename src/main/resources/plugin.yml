@@ -1,0 +1,8 @@
+name: RandomLootChest
+author: Herzchen
+authors: [bottomdumber, RestrictedPower]
+version: 3.2.0 X
+main: me.Herzchen.RandomLootChest.Main
+softdepend: [Multiverse-Core]
+commands:
+  rlc:

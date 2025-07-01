@@ -218,7 +218,6 @@ public class Main extends JavaPlugin implements Listener {
       this.saveLegalConstants("legal_sounds.txt", "org.bukkit.Sound");
       this.saveLegalConstants("legal_particles.txt", "org.bukkit.Particle");
       if (!this.checkConfig()) {
-         this.getPluginLoader().disablePlugin(this);
          this.getServer().getConsoleSender().sendMessage("§c============= §bRandomLootChest CẢNH BÁO §c===============");
          this.getServer().getConsoleSender().sendMessage("§c==§e                                                 §c==");
          this.getServer().getConsoleSender().sendMessage("§c==§e     THIẾU HOẶC THỪA TÙY CHỌN TRONG CONFIG.YML      §c==");
@@ -226,8 +225,8 @@ public class Main extends JavaPlugin implements Listener {
          this.getServer().getConsoleSender().sendMessage("§c==§e                                                 §c==");
          this.getServer().getConsoleSender().sendMessage("§c========================§c§c=============================");
          this.pause(5);
+         return;
       } else if (!this.getConfig().getBoolean("EnablePlugin")) {
-         this.getPluginLoader().disablePlugin(this);
          this.getServer().getConsoleSender().sendMessage("§c================= §bRandomLootChest §c===================");
          this.getServer().getConsoleSender().sendMessage("§c==§e                                                 §c==");
          this.getServer().getConsoleSender().sendMessage("§c==§e               PLUGIN ĐÃ BỊ TẮT                  §c==");
@@ -235,6 +234,7 @@ public class Main extends JavaPlugin implements Listener {
          this.getServer().getConsoleSender().sendMessage("§c==§e                                                 §c==");
          this.getServer().getConsoleSender().sendMessage("§c========================§c§c=============================");
          this.pause(5);
+         return;
       } else {
          this.SpawnBlockCondition_Positive = new Main.MaterialCondition(this.getConfig().getString("SpawnBlockCondition"), false);
          this.SpawnBlockCondition_Negative = new Main.MaterialCondition(this.getConfig().getString("SpawnBlockCondition"), true);
@@ -297,7 +297,6 @@ public class Main extends JavaPlugin implements Listener {
          }
 
          if (!this.timer.loadChests()) {
-            this.getPluginLoader().disablePlugin(this);
             this.getServer().getConsoleSender().sendMessage("§c============== §bRandomLootChest LỖI §c================");
             this.getServer().getConsoleSender().sendMessage("§c==§e                                                 §c==");
             this.getServer().getConsoleSender().sendMessage("§c==§e         LỖI KHI ĐỌC CƠ SỞ DỮ LIỆU            §c==");
@@ -305,6 +304,7 @@ public class Main extends JavaPlugin implements Listener {
             this.getServer().getConsoleSender().sendMessage("§c==§e                                                 §c==");
             this.getServer().getConsoleSender().sendMessage("§c========================§c§c=============================");
             this.pause(5);
+            return;
          } else {
             FindAvaliableLocation.init();
             gc.GenerateChest(this.SpawnChestPerTime);
@@ -317,6 +317,14 @@ public class Main extends JavaPlugin implements Listener {
             }
 
             this.PluginenabledEnabled = true;
+
+            this.getServer().getConsoleSender().sendMessage("§c==================== §6RandomLootChest §c===================");
+            this.getServer().getConsoleSender().sendMessage("§a==§f                                                §a==§f==");
+            this.getServer().getConsoleSender().sendMessage("§a==§f                  PLUGIN ĐÃ ĐƯỢC BẬT            §a==§f==");
+            this.getServer().getConsoleSender().sendMessage("§a==§f            MỌI VẤN ĐỀ XIN LIÊN HỆ DISCORD      §a==§f==");
+            this.getServer().getConsoleSender().sendMessage("§a==§f                   itztli_herzchen              §a==§f==");
+            this.getServer().getConsoleSender().sendMessage("§a==§f                                                §a==§f==");
+            this.getServer().getConsoleSender().sendMessage("§c============================§c§c============================");
          }
       }
 

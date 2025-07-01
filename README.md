@@ -28,3 +28,4 @@ Server IP: pe.zowmc.com
 
 Hãy ghé thăm server của chúng tôi để trải nghiệm plugin trong môi trường thực tế! 🎪
 
+**Văn xài ChatGPT nên mn thông cảm**

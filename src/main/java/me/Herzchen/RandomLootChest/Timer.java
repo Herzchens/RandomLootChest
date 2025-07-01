@@ -1,15 +1,16 @@
 package me.Herzchen.RandomLootChest;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 class Timer {
    static Timer instance = new Timer();

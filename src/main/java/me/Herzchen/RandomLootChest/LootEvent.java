@@ -1,8 +1,5 @@
 package me.Herzchen.RandomLootChest;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map.Entry;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,6 +12,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.material.MaterialData;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 public class LootEvent implements Listener {
    Database data;

@@ -1,11 +1,12 @@
 package me.Herzchen.RandomLootChest;
 
-import java.util.Random;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Random;
 
 public class OpenLootInventory {
    static OpenLootInventory instance = new OpenLootInventory();

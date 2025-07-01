@@ -1,7 +1,5 @@
 package me.Herzchen.RandomLootChest;
 
-import java.util.Iterator;
-import java.util.Map.Entry;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,6 +9,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 public class CommandManager implements CommandExecutor {
    int num = 0;
@@ -109,7 +110,7 @@ public class CommandManager implements CommandExecutor {
                }
 
                this.le.killallchests();
-               sender.sendMessage("§aAll the chests have been succesfully deleted!");
+               sender.sendMessage("§aAll the chests have been successfully deleted!");
             } else if (args[0].equalsIgnoreCase("forcespawn")) {
                if (!sender.hasPermission("randomlootchest.forcespawn")) {
                   sender.sendMessage("§cInsufficient permissions.");

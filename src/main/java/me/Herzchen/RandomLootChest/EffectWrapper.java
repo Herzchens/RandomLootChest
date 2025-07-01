@@ -1,13 +1,14 @@
 package me.Herzchen.RandomLootChest;
 
+import org.bukkit.Effect;
+import org.bukkit.Effect.Type;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import org.bukkit.Effect;
-import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.Effect.Type;
 
 public class EffectWrapper {
    private Consumer<Location> play = null;

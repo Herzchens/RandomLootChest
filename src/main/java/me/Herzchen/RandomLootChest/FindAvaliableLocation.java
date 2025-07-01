@@ -1,8 +1,9 @@
 package me.Herzchen.RandomLootChest;
 
-import java.util.Random;
 import org.bukkit.Location;
 import org.bukkit.World;
+
+import java.util.Random;
 
 public class FindAvaliableLocation {
    static FindAvaliableLocation instance = new FindAvaliableLocation();

@@ -51,3 +51,4 @@ build/
 
 # File JAR từ javax (nếu muốn ignore)
 lib/javax.*.jar
+/dependency-reduced-pom.xml

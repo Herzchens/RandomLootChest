@@ -1,9 +1,10 @@
 package me.Herzchen.RandomLootChest;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Effect;
-import org.bukkit.Effect.Type;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.World;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,110 +13,124 @@ import java.util.function.Function;
 
 public class EffectWrapper {
    private Consumer<Location> play = null;
-   private static Map<String, String> maptoParticle = new HashMap();
+   private static final Map<String, String> PARTICLE_MAPPINGS = new HashMap<>();
+   private static final boolean IS_NEW_API;
 
-   private EffectWrapper(Object effect) {
-      if (effect != null) {
-         if (effect instanceof Effect) {
-            Effect bukkitEffect = (Effect)effect;
-            if (!bukkitEffect.getType().name().equals("PARTICLE")) {
-               this.play = (location) -> {
-                  location.getWorld().playEffect(location, bukkitEffect, 1);
-               };
-            } else {
-               this.play = (location) -> {
-                  location.getWorld().spigot().playEffect(location.clone().add(0.5D, 0.5D, 0.5D), bukkitEffect, 0, 0, 0.1F, 0.1F, 0.1F, 0.05F, 50, 30);
-               };
-            }
-         } else {
-            Particle particle = (Particle)effect;
-            this.play = (location) -> {
-               location.getWorld().spawnParticle(particle, location.clone().add(0.5D, 0.5D, 0.5D), 50, 0.1D, 0.1D, 0.1D, 0.05D);
-            };
-         }
+   static {
+      String serverVersion = Bukkit.getBukkitVersion();
+      String mainVersion = serverVersion.split("-")[0];
+      int majorVersion = Integer.parseInt(mainVersion.split("\\.")[0]);
+      int minorVersion = Integer.parseInt(mainVersion.split("\\.")[1]);
+      int patchVersion = 0;
+      if (mainVersion.split("\\.").length > 2) {
+         patchVersion = Integer.parseInt(mainVersion.split("\\.")[2]);
       }
 
+      IS_NEW_API = (minorVersion >= 13);
+      PARTICLE_MAPPINGS.put("COLOURED_DUST", IS_NEW_API ? "REDSTONE" : "REDSTONE");
+      PARTICLE_MAPPINGS.put("EXPLOSION", IS_NEW_API ? "POOF" : "EXPLOSION_NORMAL");
+      PARTICLE_MAPPINGS.put("FLYING_GLYPH", "ENCHANT");
+      PARTICLE_MAPPINGS.put("HAPPY_VILLAGER", "VILLAGER_HAPPY");
+      PARTICLE_MAPPINGS.put("INSTANT_SPELL", "INSTANT_EFFECT");
+      PARTICLE_MAPPINGS.put("ITEM_BREAK", "ITEM_CRACK");
+      PARTICLE_MAPPINGS.put("LARGE_SMOKE", "LARGE_SMOKE");
+      PARTICLE_MAPPINGS.put("LAVA_POP", "LAVA");
+      PARTICLE_MAPPINGS.put("LAVADRIP", "DRIPPING_LAVA");
+      PARTICLE_MAPPINGS.put("MAGIC_CRIT", "ENCHANTED_HIT");
+      PARTICLE_MAPPINGS.put("PARTICLE_SMOKE", "SMOKE");
+      PARTICLE_MAPPINGS.put("POTION_SWIRL", "ENTITY_EFFECT");
+      PARTICLE_MAPPINGS.put("POTION_SWIRL_TRANSPARENT", "AMBIENT_ENTITY_EFFECT");
+      PARTICLE_MAPPINGS.put("SMALL_SMOKE", "SMALL_SMOKE");
+      PARTICLE_MAPPINGS.put("SNOWBALL_BREAK", "ITEM_SNOWBALL");
+      PARTICLE_MAPPINGS.put("SPLASH", "SPLASH");
+      PARTICLE_MAPPINGS.put("TILE_BREAK", "BLOCK_CRACK");
+      PARTICLE_MAPPINGS.put("TILE_DUST", "BLOCK_DUST");
+      PARTICLE_MAPPINGS.put("VILLAGER_THUNDERCLOUD", "ANGRY_VILLAGER");
+      PARTICLE_MAPPINGS.put("VOID_FOG", "UNDERWATER");
+      PARTICLE_MAPPINGS.put("WATERDRIP", "DRIPPING_WATER");
+      PARTICLE_MAPPINGS.put("WITCH_MAGIC", "WITCH");
+
+      if (IS_NEW_API) {
+         PARTICLE_MAPPINGS.put("EXPLOSION_NORMAL", "POOF");
+         PARTICLE_MAPPINGS.put("REDSTONE", "DUST");
+         PARTICLE_MAPPINGS.put("ITEM_CRACK", "ITEM");
+         PARTICLE_MAPPINGS.put("BLOCK_CRACK", "BLOCK");
+         PARTICLE_MAPPINGS.put("BLOCK_DUST", "BLOCK");
+         PARTICLE_MAPPINGS.put("SPELL_MOB", "ENTITY_EFFECT");
+         PARTICLE_MAPPINGS.put("SPELL_MOB_AMBIENT", "AMBIENT_ENTITY_EFFECT");
+      }
+   }
+
+   private EffectWrapper(Object effect) {
+      if (effect instanceof Particle particle) {
+         this.play = location -> {
+            World world = location.getWorld();
+            Location center = location.clone().add(0.5, 0.5, 0.5);
+            if (IS_NEW_API) {
+               world.spawnParticle(particle, center, 50, 0.1, 0.1, 0.1, 0.05);
+            } else {
+               switch (particle.name()) {
+                  case "REDSTONE":
+                     break;
+                  default:
+                     world.spawnParticle(particle, center, 50, 0.1, 0.1, 0.1, 0.05);
+               }
+            }
+         };
+      } else if (effect instanceof Effect) {
+         Effect eff = (Effect) effect;
+         this.play = location -> location.getWorld().playEffect(location, eff, 1);
+      }
    }
 
    void play(Location location) {
       if (this.play != null) {
          this.play.accept(location);
       }
-
    }
 
    public static EffectWrapper create(String effectName, EffectWrapper defaultValue, Function<String, EffectWrapper> notFound) {
-      if (effectName != null && !effectName.trim().isEmpty()) {
-         String[] var3 = effectName.split("[\\s|;,]+");
-         int var4 = var3.length;
+      if (effectName == null || effectName.trim().isEmpty()) {
+         return defaultValue;
+      }
 
-         for(int var5 = 0; var5 < var4; ++var5) {
-            String s = var3[var5];
-            String name = s.toUpperCase();
-            if (name.equals("NONE")) {
-               return null;
-            }
+      String[] parts = effectName.split("[\\s|;,]+");
+      for (String part : parts) {
+         String name = part.toUpperCase().trim();
+         if (name.equals("NONE")) {
+            return null;
+         }
 
-            try {
-               Effect effect = Effect.valueOf(name);
-               if (effect.getType() != Type.SOUND) {
-                  return new EffectWrapper(effect);
-               }
-            } catch (Exception var11) {
+         String mappedName = PARTICLE_MAPPINGS.getOrDefault(name, name);
+
+         try {
+            return new EffectWrapper(Particle.valueOf(mappedName));
+         } catch (IllegalArgumentException e1) {
+            if (!IS_NEW_API) {
                try {
-                  return new EffectWrapper(Particle.valueOf(name));
-               } catch (Exception var10) {
-                  try {
-                     if (maptoParticle.containsKey(name)) {
-                        return new EffectWrapper(Particle.valueOf((String)maptoParticle.get(name)));
-                     }
-                  } catch (Exception var9) {
+                  Effect effect = Effect.valueOf(mappedName);
+                  if (effect.getType() != Effect.Type.SOUND) {
+                     return new EffectWrapper(effect);
                   }
+               } catch (IllegalArgumentException e2) {
                }
             }
          }
-
-         return notFound != null ? (EffectWrapper)notFound.apply(effectName) : null;
-      } else {
-         return defaultValue;
       }
+
+      return notFound != null ? notFound.apply(effectName) : null;
    }
 
    public static EffectWrapper create(String effectName, Function<String, EffectWrapper> notFound) {
-      return create(effectName, notFound);
+      return create(effectName, null, notFound);
    }
 
    public static EffectWrapper createNotNull(String effectName, EffectWrapper defaultValue, Function<String, EffectWrapper> notFound) {
       EffectWrapper effect = create(effectName, defaultValue, notFound);
-      return effect != null ? effect : new EffectWrapper((Object)null);
+      return effect != null ? effect : new EffectWrapper((Object) null);
    }
 
    public static EffectWrapper createNotNull(String effectName, Function<String, EffectWrapper> notFound) {
-      return createNotNull(effectName, notFound);
-   }
-
-   static {
-      maptoParticle.put("COLOURED_DUST", "REDSTONE");
-      maptoParticle.put("EXPLOSION", "EXPLOSION_NORMAL");
-      maptoParticle.put("FLYING_GLYPH", "ENCHANTMENT_TABLE");
-      maptoParticle.put("HAPPY_VILLAGER", "VILLAGER_HAPPY");
-      maptoParticle.put("INSTANT_SPELL", "SPELL_INSTANT");
-      maptoParticle.put("ITEM_BREAK", "ITEM_CRACK");
-      maptoParticle.put("LARGE_SMOKE", "SMOKE_LARGE");
-      maptoParticle.put("LAVA_POP", "LAVA");
-      maptoParticle.put("LAVADRIP", "DRIP_LAVA");
-      maptoParticle.put("MAGIC_CRIT", "CRIT_MAGIC");
-      maptoParticle.put("PARTICLE_SMOKE", "SMOKE_NORMAL");
-      maptoParticle.put("POTION_SWIRL", "SPELL_MOB");
-      maptoParticle.put("POTION_SWIRL_TRANSPARENT", "SPELL_MOB_AMBIENT");
-      maptoParticle.put("SMALL_SMOKE", "TOWN_AURA");
-      maptoParticle.put("SNOWBALL_BREAK", "SNOWBALL");
-      maptoParticle.put("SPLASH", "WATER_SPLASH");
-      maptoParticle.put("TILE_BREAK", "BLOCK_CRACK");
-      maptoParticle.put("TILE_DUST", "BLOCK_DUST");
-      maptoParticle.put("VILLAGER_THUNDERCLOUD", "VILLAGER_ANGRY");
-      maptoParticle.put("VOID_FOG", "SUSPENDED_DEPTH");
-      maptoParticle.put("WATERDRIP", "DRIP_WATER");
-      maptoParticle.put("WITCH_MAGIC", "SPELL_WITCH");
+      return createNotNull(effectName, null, notFound);
    }
 }

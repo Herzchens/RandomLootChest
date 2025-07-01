@@ -9,72 +9,62 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spigot.1_20_1.version>1.20.1-R0.1-SNAPSHOT</spigot.1_20_1.version>
-        <spigot.1_12_2.version>1.12.2-R0.1-SNAPSHOT</spigot.1_12_2.version>
-        <jetbrains.annotations.version>24.0.1</jetbrains.annotations.version>
+        <spigot.version>1.20.1-R0.1-SNAPSHOT</spigot.version>
+        <papermc.version>1.20.1</papermc.version>
+        <xseries.version>9.4.0</xseries.version>
     </properties>
 
     <repositories>
-        <!-- Repository Spigot -->
+        <!-- Spigot Repository -->
         <repository>
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
 
-        <!-- Repository PaperMC -->
+        <!-- PaperMC Repository -->
         <repository>
             <id>papermc-repo</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
 
-        <!-- Repository cho JetBrains annotations -->
+        <!-- XSeries Repository -->
         <repository>
-            <id>central</id>
-            <url>https://repo.maven.apache.org/maven2</url>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
         </repository>
     </repositories>
 
     <dependencies>
-        <!-- Spigot 1.20.1 -->
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>${spigot.1_20_1.version}</version>
-            <scope>provided</scope>
-            <classifier>shaded</classifier>
-        </dependency>
-
-        <!-- Spigot 1.12.2 -->
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>${spigot.1_12_2.version}</version>
-            <scope>provided</scope>
-            <classifier>shaded</classifier>
-        </dependency>
-
-        <!-- Paper API 1.20.1 -->
+        <!-- Paper API -->
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.20.1-R0.1-SNAPSHOT</version>
+            <version>${papermc.version}-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- XSeries -->
+        <dependency>
+            <groupId>com.github.cryptomorin</groupId>
+            <artifactId>XSeries</artifactId>
+            <version>${xseries.version}</version>
         </dependency>
 
         <!-- JetBrains Annotations -->
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>${jetbrains.annotations.version}</version>
+            <version>24.0.1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <!-- Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -88,6 +78,7 @@
                 </configuration>
             </plugin>
 
+            <!-- ShadowJar Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -98,6 +89,14 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
+                        <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.cryptomorin.xseries</pattern>
+                                    <shadedPattern>your.plugin.package.shaded.xseries</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

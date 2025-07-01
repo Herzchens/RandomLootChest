@@ -1,147 +1,124 @@
 ########################################################################################################################
-### Commands and permissions
+### Lệnh và quyền
 ########################################################################################################################
 # +------------------+---------------------------------------------------------+-----------------------------+
-# |      Command     |                      Description                        |       Permission            |
+# |      Lệnh        |                      Mô tả                              |       Quyền                 |
 # +------------------+---------------------------------------------------------+-----------------------------+
-# | /rlc             | Show help                                               | randomlootchest.general     |
-# | /rlc additem     | Open the item sumbition Gui                             | randomlootchest.additem     |
-# | /rlc addchest    | Add fixed chest to collection by right-click on it      | randomlootchest.fixedchest  |
-# | /rlc delchest    | Delete fixed chest from collection by right-click on it | randomlootchest.fixedchest  |
-# | /rlc delall      | Delete all fixed chests from collection                 | randomlootchest.delall      |
-# | /rlc killall     | Clear all random chests from the server                 | randomlootchest.killall     |
-# | /rlc togglebreak | Be able to clear a random chest by breaking it          | randomlootchest.togglebreak |
-# | /rlc forcespawn  | Forcespawn a random chest                               | randomlootchest.forcespawn  |
-# | /rlc rndtime     | Randomize time left to kill/update chests               | randomlootchest.rndtime     |
+# | /rlc             | Hiển thị trợ giúp                                       | randomlootchest.general     |
+# | /rlc additem     | Mở GUI thêm vật phẩm                                    | randomlootchest.additem     |
+# | /rlc addchest    | Thêm rương cố định bằng cách nhấn chuột phải            | randomlootchest.fixedchest  |
+# | /rlc delchest    | Xóa rương cố định bằng cách nhấn chuột phải             | randomlootchest.fixedchest  |
+# | /rlc delall      | Xóa tất cả rương cố định                                | randomlootchest.delall      |
+# | /rlc killall     | Xóa tất cả rương ngẫu nhiên khỏi máy chủ                | randomlootchest.killall     |
+# | /rlc togglebreak | Cho phép phá rương ngẫu nhiên                           | randomlootchest.togglebreak |
+# | /rlc forcespawn  | Tạo rương ngẫu nhiên ngay lập tức                       | randomlootchest.forcespawn  |
+# | /rlc rndtime     | Ngẫu nhiên hóa thời gian tồn tại của rương              | randomlootchest.rndtime     |
 # +------------------+---------------------------------------------------------+-----------------------------+
 ########################################################################################################################
 
 ########################################################################################################################
-### Common options
+### Tùy chọn chung
 ########################################################################################################################
-# Wolrd where chests will be present (both random and fixed chests)
+# Thế giới xuất hiện rương (cả ngẫu nhiên và cố định)
 World: "world"
 
 ########################################################################################################################
-### Random-position chest
+### Rương vị trí ngẫu nhiên
 ########################################################################################################################
-# region where chests are spawning
+# Khu vực rương xuất hiện
 LargestDinctance_X: 10
 SmallestDinctance_X: -10
 LargestDinctance_Y: 255
 SmallestDinctance_Y: 0
 LargestDinctance_Z: 10
 SmallestDinctance_Z: -10
-# Delay before new chest spawning (seconds)
+# Thời gian chờ giữa các lần tạo rương (giây)
 SpawnChestPerTime: 10
-# Set too false to disable kill chest
+# Bật/tắt xóa rương tự động
 KillChest: true
-# Time in seconds after which chest will be killed (seconds)
+# Thời gian trước khi rương biến mất (giây)
 KillChestAfterTime: 60
-# Message when player is not allowed to break chest
-NotAbleToBreakAchest: "&cYou can't break a loot chest!"
-# Set message '' to disable it at all
-MessageOnSpawn: "&6&l--------------------------------------\n&cA chest has spawned at &ax: &6{X} &ay: &6{Y} &az: &6{Z}.\n&6&l--------------------------------------"
-# Set message '' to disable it at all
-MessageOnLoot: "&6&l--------------------------------------\n&4{Player} &clooted the chest at &ax: &6{X} &ay: &6{Y} &az: &6{Z}.\n&6&l--------------------------------------"
-# Set message: '' to disable it at all
-MessageOnKill: "&6&l--------------------------------------\n&4The chest at &ax: &6{X} &ay: &6{Y} &az: &6{Z} &4has been removed!\n&6&l--------------------------------------"
-# commands (string list) to execute, when player open chest
+# Thông báo khi không được phép phá rương
+NotAbleToBreakAchest: "&cBạn không thể phá rương loot!"
+# Để trống để tắt thông báo
+MessageOnSpawn: "&6&l--------------------------------------\n&cRương đã xuất hiện tại &ax: &6{X} &ay: &6{Y} &az: &6{Z}.\n&6&l--------------------------------------"
+# Để trống để tắt thông báo
+MessageOnLoot: "&6&l--------------------------------------\n&4{Player} &cđã loot rương tại &ax: &6{X} &ay: &6{Y} &az: &6{Z}.\n&6&l--------------------------------------"
+# Để trống để tắt thông báo
+MessageOnKill: "&6&l--------------------------------------\n&4Rương tại &ax: &6{X} &ay: &6{Y} &az: &6{Z} &4đã biến mất!\n&6&l--------------------------------------"
+# Lệnh thực thi khi người chơi mở rương
 CommandsToExecuteOnLoot:
   - eco give {player} 100
-# Chest effect while it is active (for available values see below)
+# Hiệu ứng rương khi hoạt động
 RandomChestEffect: MOBSPAWNER_FLAMES
-# Chest sound when it is spawning (for available values see below)
+# Âm thanh khi rương xuất hiện
 RandomChestSound: NONE
-# Chest sound when it is opened (for available values see below)
+# Âm thanh khi mở rương
 RandomChestOpenSound: CHEST_OPEN|BLOCK_CHEST_OPEN
 
 ########################################################################################################################
-### Conditions where chests can be spawned. WARNING! CHANGE IT AT YOUR OWN RISK
+### Điều kiện xuất hiện rương. CẢNH BÁO! THAY ĐỔI CÓ THỂ GÂY LỖI
 ########################################################################################################################
-# There are three conditions that must be satisfied simultaneously: 
-# SpawnBlockCondition - Condition for block which chest can overwrite
-# UnderBlockCondition - Condition for block under chest
-# SideBlockCondition - Condition for blocks on chest sides
-# 
-# Conditions chek block material. Each condition is a string with material names and/or materials properties.
-# Use ' ', ',', ';' as separator to specify several parameter in one condition
-# 
-# All condition parameters are divided in two groups: positive and negative
-# Positive condition group is checked as "one of ..." and negative - as "not one of ..."
-# Use '!' to negative condition parameter.
-# 
-# You can use not only material names, but also material properties. They are:
+# Có ba điều kiện phải đồng thời thỏa mãn:
+# SpawnBlockCondition - Điều kiện khối bị rương thay thế
+# UnderBlockCondition - Điều kiện khối bên dưới
+# SideBlockCondition - Điều kiện khối xung quanh
+#
+# Điều kiện kiểm tra vật liệu khối. Mỗi điều kiện là chuỗi chứa tên vật liệu và/hoặc thuộc tính.
+# Sử dụng ' ', ',', ';' để phân cách nhiều tham số
+#
+# Tham số chia hai nhóm: tích cực (phải có) và tiêu cực (không được có)
+# Sử dụng '!' để đánh dấu điều kiện tiêu cực
+#
+# Có thể sử dụng thuộc tính vật liệu:
 # _FUEL_, _RECORD_, _OCCLUDING_, _TRANSPARENT_, _BLOCK_, _BURNABLE_, _EDIBLE_, _FLAMMABLE_, _SOLID_, _GRAVITY_
-# For details see: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
-# 
-# There are always additional hard-coded conditions. Chest can't be spawned:
-# over block that have BlockState (see: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/block/BlockState.html)
-# when there are another chest on the side
-# 
-# Example: "!RAILS, _TRANSPARENT_, !SAPLING" means: 
-# "Material must be transparent and not of rails or sapling "
-# 
-# Plugin saves the block data when chest overwrites it. This is block material and its extra number (for eaxmple CARPET:3)
-# Then it restores that data when chest is disappeared. Also, plugin does not save blocks under the chest, above 
-# the chest and on it sides. So, don't set conditions to allow to overwrite double plants, long grass, signs etc.
-# They can be restored incorrectly.
-# 
-# SpawnBlockCondition works fine with torches, fires, flowers, diodes. You can add them to condition to look
-# how it works. But I recomends to test it first in small region.
+#
+# Ví dụ: "!RAILS, _TRANSPARENT_, !SAPLING" nghĩa là:
+# "Vật liệu phải trong suốt và không phải đường ray hoặc cây non"
 ########################################################################################################################
-# Condition for block which chest can overwrite
+# Điều kiện khối bị thay thế
 SpawnBlockCondition: "AIR,SNOW,CARPET"
-# Condition for block under chest
+# Điều kiện khối bên dưới
 UnderBlockCondition: "!_TRANSPARENT_,!WATER,!STATIONARY_WATER,!LAVA,!STATIONARY_LAVA,!SOIL,!GRASS_PATH"
-# Condition for blocks on chest sides
+# Điều kiện khối xung quanh
 SideBlockCondition: "!CACTUS"
 
 ########################################################################################################################
-### Fixed-position chest
+### Rương vị trí cố định
 ########################################################################################################################
-# Times in seconds after which chest updates its inventory. Time will be random in Min:Max interval (seconds)
+# Khoảng thời gian cập nhật inventory (ngẫu nhiên giữa Min/Max, giây)
 FixedChestUpdateTimeMin: 10
 FixedChestUpdateTimeMax: 20
-# Fixed-chest effect when it is updated (for available values see below)
+# Hiệu ứng khi rương cập nhật
 FixedChestEffect: EXPLOSION
-# Fixed-chest sound when it is updated (for available values see below)
+# Âm thanh khi rương cập nhật
 FixedChestSound: DIG_GRASS|BLOCK_GRASS_BREAK
 
 ########################################################################################################################
-### Inventory GUI
+### Giao diện kho đồ (GUI)
 ########################################################################################################################
-Inventory_Name: "&cCongratulations!"
+Inventory_Name: "&cChúc mừng!"
 Inventory_Slots: 27
 ItemAmountToAdd: 5
-NotificationInterval: 300 #Spam time
+NotificationInterval: 300 # Thời gian chống spam (giây)
 ########################################################################################################################
-### Effects and Sounds values in options
+### Giá trị Hiệu ứng và Âm thanh
 ########################################################################################################################
-# Use NONE as value to disable any effect/sound option or use legal name
+# Sử dụng NONE để tắt hiệu ứng/âm thanh
 #
-# Legal effect names you can find here:
+# Tên hiệu ứng hợp lệ:
 #   https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Effect.html
-# you can also use particle names as effect (for spigot 1.9 and above).
-# Plugin first tries to find value among effect names and then (on failure) among particles names.
-# Legal particle names you can find here:
-#  https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
+# Tên particle (spigot 1.9+):
+#   https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
 #
-# Legal sound names you can find here:
+# Tên âm thanh hợp lệ:
 #   https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
-#   https://dev.bukkit.org/projects/justsound/pages/sound-list
-# Note: Sounds names for 1.8 and 1.9-1.12 are different
 #
-# You can also specify several effects/sounds in one option, but only first available value will be used
-# Use '|', ' ', ',', ';' as separator to specify several values in one option
-# This is useful to set value both for all versions of spigot servers
-# If first value is not found on current spigot server, then second value will be analyzed. And so on,
-#
-# Notes. To help you with effect and sound values, plugin writes three files to plugin folder (if they are absent):
-# legal_effects.txt, legal_particles.txt and legal_sounds.txt. You can look for available values there.
+# Có thể chỉ định nhiều giá trị cách nhau bằng '|', ' ', ',', ';'
+# Plugin sẽ dùng giá trị đầu tiên khả dụng
 ########################################################################################################################
 
 ########################################################################################################################
-### When you completely configure plugin set EnablePlugin: true
+### Bật plugin sau khi cấu hình hoàn tất
 ########################################################################################################################
 EnablePlugin: false

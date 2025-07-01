@@ -101,23 +101,23 @@ public class ItemAdderGui implements Listener {
       Inventory inv = player.getOpenInventory().getTopInventory();
       ItemStack arrow = new ItemStack(Material.ARROW);
       ItemMeta arrowmeta = arrow.getItemMeta();
-      arrowmeta.setDisplayName("§cBack");
+      arrowmeta.setDisplayName("§cQuay lại");
       arrow.setItemMeta(arrowmeta);
       inv.setItem(45, arrow);
-      arrowmeta.setDisplayName("§cNext");
+      arrowmeta.setDisplayName("§cTrang sau");
       arrow.setItemMeta(arrowmeta);
       inv.setItem(53, arrow);
       ItemStack paper = new ItemStack(Material.PAPER);
       ItemMeta papermeta = paper.getItemMeta();
-      papermeta.setDisplayName("§6Info:");
+      papermeta.setDisplayName("§6Thông tin:");
       List<String> lore = new ArrayList();
-      lore.add("§aTo add items to the chests");
-      lore.add("§ajust drop them in here.");
-      lore.add("§aTo edit the chance of an item");
-      lore.add("§aright click it and a chance editor");
-      lore.add("§agui will open.");
-      lore.add("§cIf you don't edit the chance it will");
-      lore.add("§cautomatically be set to 50.");
+      lore.add("§aĐể thêm vật phẩm vào rương");
+      lore.add("§achỉ cần thả chúng vào đây.");
+      lore.add("§aĐể chỉnh sửa tỷ lệ của vật phẩm");
+      lore.add("§anhấp chuột phải và trình chỉnh sửa tỷ lệ");
+      lore.add("§asẽ mở ra.");
+      lore.add("§cNếu bạn không chỉnh sửa tỷ lệ, nó sẽ");
+      lore.add("§ctự động được đặt thành 50.");
       papermeta.setLore(lore);
       paper.setItemMeta(papermeta);
       inv.setItem(49, paper);
@@ -155,7 +155,7 @@ public class ItemAdderGui implements Listener {
    }
 
    public void openPage(Player player, int page) {
-      Inventory inv = Bukkit.createInventory((InventoryHolder)null, 54, "§8Page: " + page + "/5");
+      Inventory inv = Bukkit.createInventory((InventoryHolder)null, 54, "§8Trang: " + page + "/5");
       Main.pl.additem.add(player);
       Main.pl.currentpage.put(player, page);
       player.openInventory(inv);
@@ -177,8 +177,8 @@ public class ItemAdderGui implements Listener {
 
    public int chancetoaddorremove(ItemStack item) {
       String name = ChatColor.stripColor(item.getItemMeta().getDisplayName());
-      String name1 = name.replace("Add", "");
-      String name2 = name1.replace("Remove", "");
+      String name1 = name.replace("Thêm", "");
+      String name2 = name1.replace("Xóa", "");
       String name3 = name2.replace(" ", "");
       return Integer.parseInt(name3);
    }
@@ -203,7 +203,7 @@ public class ItemAdderGui implements Listener {
                player.getOpenInventory().close();
                this.openPage(player, inv);
             } else {
-               player.sendMessage("§cPlease fill this page before moving to the next one.");
+               player.sendMessage("§cVui lòng điền đầy trang này trước khi chuyển sang trang tiếp theo.");
             }
 
             return;
@@ -255,18 +255,18 @@ public class ItemAdderGui implements Listener {
             if (e.getCurrentItem().getDurability() == 13) {
                chancetoremove = this.chancetoaddorremove(e.getCurrentItem());
                if (currentchance + chancetoremove > 100) {
-                  player.sendMessage("§cThe chance can't be bigger than 100");
+                  player.sendMessage("§cTỷ lệ không thể lớn hơn 100");
                } else {
                   this.addchance(id, chancetoremove);
-                  inv1.setItem(13, this.item(new ItemStack(Material.DIAMOND), "§6Current Chance: §c" + Main.pl.chances.get(id), 0));
+                  inv1.setItem(13, this.item(new ItemStack(Material.DIAMOND), "§6Tỷ lệ hiện tại: §c" + Main.pl.chances.get(id), 0));
                }
             } else if (e.getCurrentItem().getDurability() == 14) {
                chancetoremove = this.chancetoaddorremove(e.getCurrentItem());
                if (currentchance - chancetoremove < 1) {
-                  player.sendMessage("§cThe chance can't be less than 1");
+                  player.sendMessage("§cTỷ lệ không thể nhỏ hơn 1");
                } else {
                   this.remove(id, chancetoremove);
-                  inv1.setItem(13, this.item(new ItemStack(Material.DIAMOND), "§6Current Chance: §c" + Main.pl.chances.get(id), 0));
+                  inv1.setItem(13, this.item(new ItemStack(Material.DIAMOND), "§6Tỷ lệ hiện tại: §c" + Main.pl.chances.get(id), 0));
                }
             }
          }
@@ -302,15 +302,15 @@ public class ItemAdderGui implements Listener {
    public void openChanceEditor(Player player, int itemid, int currentpage) {
       Main.pl.idediting.put(player, itemid);
       Main.pl.lastpageno.put(player, currentpage);
-      Inventory inv = Bukkit.createInventory((InventoryHolder)null, 27, "§aEdit the chance");
-      inv.setItem(10, this.item(new ItemStack(Material.STAINED_GLASS_PANE), "§aAdd 50", 13));
-      inv.setItem(11, this.item(new ItemStack(Material.STAINED_GLASS_PANE), "§aAdd 10", 13));
-      inv.setItem(12, this.item(new ItemStack(Material.STAINED_GLASS_PANE), "§aAdd 1", 13));
-      inv.setItem(13, this.item(new ItemStack(Material.DIAMOND), "§6Current Chance: §c" + Main.pl.chances.get(itemid), 0));
-      inv.setItem(14, this.item(new ItemStack(Material.STAINED_GLASS_PANE), "§aRemove 1", 14));
-      inv.setItem(15, this.item(new ItemStack(Material.STAINED_GLASS_PANE), "§aRemove 10", 14));
-      inv.setItem(16, this.item(new ItemStack(Material.STAINED_GLASS_PANE), "§aRemove 50", 14));
-      inv.setItem(18, this.item(new ItemStack(Material.ARROW), "§cBack", 0));
+      Inventory inv = Bukkit.createInventory((InventoryHolder)null, 27, "§aChỉnh sửa tỷ lệ");
+      inv.setItem(10, this.item(new ItemStack(Material.STAINED_GLASS_PANE), "§aThêm 50", 13));
+      inv.setItem(11, this.item(new ItemStack(Material.STAINED_GLASS_PANE), "§aThêm 10", 13));
+      inv.setItem(12, this.item(new ItemStack(Material.STAINED_GLASS_PANE), "§aThêm 1", 13));
+      inv.setItem(13, this.item(new ItemStack(Material.DIAMOND), "§6Tỷ lệ hiện tại: §c" + Main.pl.chances.get(itemid), 0));
+      inv.setItem(14, this.item(new ItemStack(Material.STAINED_GLASS_PANE), "§aXóa 1", 14));
+      inv.setItem(15, this.item(new ItemStack(Material.STAINED_GLASS_PANE), "§aXóa 10", 14));
+      inv.setItem(16, this.item(new ItemStack(Material.STAINED_GLASS_PANE), "§aXóa 50", 14));
+      inv.setItem(18, this.item(new ItemStack(Material.ARROW), "§cQuay lại", 0));
 
       for(int i = 0; i < 26; ++i) {
          if (inv.getItem(i) == null) {
@@ -328,7 +328,7 @@ public class ItemAdderGui implements Listener {
          if (Main.pl.additem.contains(entity)) {
             Player player = (Player)e.getPlayer();
             this.save(e.getInventory(), (Integer)Main.pl.currentpage.get(player));
-            e.getPlayer().sendMessage("§aItem list updated!");
+            e.getPlayer().sendMessage("§aDanh sách vật phẩm đã được cập nhật!");
             Main.pl.additem.remove(player);
             Main.pl.currentpage.remove(player);
          } else if (Main.pl.idediting.containsKey(entity)) {

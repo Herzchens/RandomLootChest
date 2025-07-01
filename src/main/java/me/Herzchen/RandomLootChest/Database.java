@@ -25,7 +25,7 @@ public class Database {
          try {
             this.dfile.createNewFile();
          } catch (IOException var3) {
-            Bukkit.getServer().getLogger().severe(ChatColor.RED + "Could not create database.yml!");
+            Bukkit.getServer().getLogger().severe(ChatColor.RED + "Không thể tạo database.yml!");
          }
       }
 
@@ -40,7 +40,7 @@ public class Database {
       try {
          this.data.save(this.dfile);
       } catch (IOException var2) {
-         Bukkit.getServer().getLogger().severe(ChatColor.RED + "Could not save database.yml!");
+         Bukkit.getServer().getLogger().severe(ChatColor.RED + "Không thể lưu database.yml!");
       }
 
    }
@@ -49,7 +49,7 @@ public class Database {
       try {
          this.data.load(this.dfile);
       } catch (IOException | InvalidConfigurationException var2) {
-         Bukkit.getServer().getLogger().severe(ChatColor.RED + "Could not load database.yml!");
+         Bukkit.getServer().getLogger().severe(ChatColor.RED + "Không thể nạp database.yml!");
       }
 
    }

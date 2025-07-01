@@ -109,12 +109,12 @@ public class LootEvent implements Listener {
                         Main.pl.FixedChests.put(location, FindAvaliableLocation.getRandom(1, FindAvaliableLocation.getRandom(1, Integer.max(FindAvaliableLocation.getRandom(Main.pl.FixedChestUpdateTimeMin, Main.pl.FixedChestUpdateTimeMax), 0))));
                         Main.pl.FixedChestSound.play(location);
                         Main.pl.FixedChestEffect.play(location);
-                        player.sendMessage("§aFixed chest has been added to collection §f=)");
+                        player.sendMessage("§arương cố định đã được thêm vào bộ sưu tập §f=)");
                      } else {
-                        player.sendMessage("§cSomething went wrong §f=(");
+                        player.sendMessage("§cCó gì đó không ổn §f=(");
                      }
                   } else {
-                     player.sendMessage("§cOops... This chest is already added §f=\\");
+                     player.sendMessage("§cOops... rương này đã được thêm vào rồi §f=\\");
                   }
                   break;
                case 1:
@@ -130,9 +130,9 @@ public class LootEvent implements Listener {
                         }
                      }
 
-                     player.sendMessage("§aFixed chest has been removed from collection §f=)");
+                     player.sendMessage("§arương cố định đã bị xóa khỏi bộ sưu tập §f=)");
                   } else {
-                     player.sendMessage("§cOops... This chest is not our §f=\\");
+                     player.sendMessage("§cOops... Cái rương này không phải của chúng ta §f=\\");
                   }
                }
             }
@@ -180,7 +180,7 @@ public class LootEvent implements Listener {
          } else {
             e.setCancelled(true);
             this.deleteChest(e.getBlock().getLocation());
-            e.getPlayer().sendMessage("§aYou successfully broke a loot chest!");
+            e.getPlayer().sendMessage("§aBạn đã phá được 1 hòm thính");
          }
       } else if (Main.isFixedChestType(block) && Main.pl.FixedChests.containsKey(location)) {
          if (!Main.pl.abletobreak.contains(e.getPlayer())) {
@@ -194,7 +194,7 @@ public class LootEvent implements Listener {
                inventory.clear();
             }
 
-            e.getPlayer().sendMessage("§aFixed chest has been removed from collection");
+            e.getPlayer().sendMessage("§arương cố định đã bị xóa khỏi bộ sưu tập");
          }
       }
 

@@ -35,31 +35,31 @@ public class CommandManager implements CommandExecutor {
 
    public void sendhelp(Player player) {
       player.sendMessage("§c*-----§4§lRandomLootChest§r§c*-----*");
-      player.sendMessage("§c§lCommands:");
-      player.sendMessage("§c/rlc additem §6(Open the item sumbition Gui)");
-      player.sendMessage("§c/rlc addchest §6(Add fixed chest to collection by right-click on it)");
-      player.sendMessage("§c/rlc delchest §6(Delete fixed chest from collection by right-click on it)");
-      player.sendMessage("§c/rlc delall §6(Delete all fixed chests from collection)");
-      player.sendMessage("§c/rlc killall §6(Clear all random chests from the server)");
-      player.sendMessage("§c/rlc togglebreak §6(Be able to clear a random chest by breaking it or delete fixed chest)");
-      player.sendMessage("§c/rlc forcespawn §6(Forcespawn a random chest)");
-      player.sendMessage("§c/rlc rndtime §6(Randomize time left to kill/update chests)");
+      player.sendMessage("§c§lLệnh:");
+      player.sendMessage("§c/rlc additem §6(Mở GUI thêm vật phẩm)");
+      player.sendMessage("§c/rlc addchest §6(Thêm rương cố định bằng cách nhấn chuột phải)");
+      player.sendMessage("§c/rlc delchest §6(Xóa rương cố định bằng cách nhấn chuột phải)");
+      player.sendMessage("§c/rlc delall §6(Xóa tất cả rương cố định)");
+      player.sendMessage("§c/rlc killall §6(Xóa tất cả rương ngẫu nhiên)");
+      player.sendMessage("§c/rlc togglebreak §6(Bật/tắt chế độ phá rương)");
+      player.sendMessage("§c/rlc forcespawn §6(Tạo rương ngẫu nhiên ngay lập tức)");
+      player.sendMessage("§c/rlc rndtime §6(Ngẫu nhiên hóa thời gian tồn tại rương)");
       player.sendMessage("§c*-----§4§lRandomLootChest§r§c*-----*");
    }
 
    public void sendconsolehelp(ConsoleCommandSender sender) {
       sender.sendMessage("§c*-----§4§lRandomLootChest§r§c*-----*");
-      sender.sendMessage("§c§lConsole Commands:");
-      sender.sendMessage("§c/rlc delall §6(Delete all fixed chests from collection)");
-      sender.sendMessage("§c/rlc killall §6(Clear all random chests from the server)");
-      sender.sendMessage("§c/rlc forcespawn §6(Forcespawn a chest)");
-      sender.sendMessage("§c/rlc rndtime §6(Randomize time left to kill (random) or update (fixed) chests)");
+      sender.sendMessage("§c§lLệnh Console:");
+      sender.sendMessage("§c/rlc delall §6(Xóa tất cả rương cố định)");
+      sender.sendMessage("§c/rlc killall §6(Xóa tất cả rương ngẫu nhiên)");
+      sender.sendMessage("§c/rlc forcespawn §6(Tạo rương ngẫu nhiên ngay lập tức)");
+      sender.sendMessage("§c/rlc rndtime §6(Ngẫu nhiên hóa thời gian tồn tại/cập nhật rương)");
       sender.sendMessage("§c*-----§4§lRandomLootChest§r§c*-----*");
    }
 
    public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
       if (Main.pl.addChestplayers.containsKey(sender)) {
-         sender.sendMessage("§cCanceled §fo_O");
+         sender.sendMessage("§cĐã hủy §fo_O");
          ((CommandManager.WaitChooseChest)Main.pl.addChestplayers.get(sender)).cancel();
          Main.pl.addChestplayers.remove(sender);
       }
@@ -70,7 +70,7 @@ public class CommandManager implements CommandExecutor {
          if (sender instanceof Player) {
             player = (Player)sender;
             if (!player.hasPermission("randomlootchest.general")) {
-               player.sendMessage("§cInsufficient permissions.");
+               player.sendMessage("§cKhông đủ quyền hạn.");
                return false;
             }
          }
@@ -92,44 +92,44 @@ public class CommandManager implements CommandExecutor {
 
                player = (Player)sender;
                if (!player.hasPermission("randomlootchest.togglebreak")) {
-                  player.sendMessage("§cInsufficient permissions.");
+                  player.sendMessage("§cKhông đủ quyền hạn.");
                   return false;
                }
 
                if (Main.pl.abletobreak.contains(player)) {
                   Main.pl.abletobreak.remove(player);
-                  player.sendMessage("§6You toggled ChestBreak §cOff!");
+                  player.sendMessage("§6Đã tắt chế độ phá rương §cTắt!");
                } else {
                   Main.pl.abletobreak.add(player);
-                  player.sendMessage("§6You toggled ChestBreak §aOn!");
+                  player.sendMessage("§6Đã bật chế độ phá rương §aBật!");
                }
             } else if (args[0].equalsIgnoreCase("killall")) {
                if (sender instanceof Player && !sender.hasPermission("randomlootchest.killall")) {
-                  sender.sendMessage("§cInsufficient permissions.");
+                  sender.sendMessage("§cKhông đủ quyền hạn.");
                   return false;
                }
 
                this.le.killallchests();
-               sender.sendMessage("§aAll the chests have been successfully deleted!");
+               sender.sendMessage("§aĐã xóa tất cả rương thành công!");
             } else if (args[0].equalsIgnoreCase("forcespawn")) {
                if (!sender.hasPermission("randomlootchest.forcespawn")) {
-                  sender.sendMessage("§cInsufficient permissions.");
+                  sender.sendMessage("§cKhông đủ quyền hạn.");
                   return false;
                }
 
                this.gc.spawnchest();
             } else if (args[0].equalsIgnoreCase("rndtime")) {
                if (!sender.hasPermission("randomlootchest.rndtime")) {
-                  sender.sendMessage("§cInsufficient permissions.");
+                  sender.sendMessage("§cKhông đủ quyền hạn.");
                   return false;
                }
 
                Main.pl.randomizeRandomChestsTimeLeft();
                Main.pl.randomizeFixedChestsTimeLeft();
-               sender.sendMessage("§eRandomize time left completed.");
+               sender.sendMessage("§eĐã ngẫu nhiên hóa thời gian thành công.");
             } else if (args[0].equalsIgnoreCase("addchest")) {
                if (!sender.hasPermission("randomlootchest.fixedchest")) {
-                  sender.sendMessage("§cInsufficient permissions.");
+                  sender.sendMessage("§cKhông đủ quyền hạn.");
                   return false;
                }
 
@@ -137,7 +137,7 @@ public class CommandManager implements CommandExecutor {
                (new CommandManager.WaitChooseChest()).start(player, "add");
             } else if (args[0].equalsIgnoreCase("delchest")) {
                if (!sender.hasPermission("randomlootchest.fixedchest")) {
-                  sender.sendMessage("§cInsufficient permissions.");
+                  sender.sendMessage("§cKhông đủ quyền hạn.");
                   return false;
                }
 
@@ -145,7 +145,7 @@ public class CommandManager implements CommandExecutor {
                (new CommandManager.WaitChooseChest()).start(player, "del");
             } else if (args[0].equalsIgnoreCase("delall")) {
                if (sender instanceof Player && !sender.hasPermission("randomlootchest.delall")) {
-                  sender.sendMessage("§cInsufficient permissions.");
+                  sender.sendMessage("§cKhông đủ quyền hạn.");
                   return false;
                }
 
@@ -163,7 +163,7 @@ public class CommandManager implements CommandExecutor {
                }
 
                Main.pl.FixedChests.clear();
-               sender.sendMessage("§aAll fixed chests has been deleted from collection!");
+               sender.sendMessage("§aĐã xóa toàn bộ rương cố định!");
             }
          }
       }
@@ -177,7 +177,7 @@ public class CommandManager implements CommandExecutor {
 
          player = (Player)sender;
          if (!player.hasPermission("randomlootchest.additem")) {
-            player.sendMessage("§cInsufficient permissions.");
+            player.sendMessage("§cKhông đủ quyền hạn.");
             return false;
          }
 
@@ -200,9 +200,9 @@ public class CommandManager implements CommandExecutor {
       }
 
       public void run() {
-         this.Player.sendMessage(String.format("§aYou have %d seconds left to right click chest §f=O", this.Left));
+         this.Player.sendMessage(String.format("§aBạn còn %d giây để nhấn chuột phải vào rương §f=O", this.Left));
          if (this.Left-- < 0) {
-            this.Player.sendMessage("§cTime is over. You are late §f=(");
+            this.Player.sendMessage("§cHết thời gian. Bạn đã quá chậm §f=(");
             Main.pl.addChestplayers.remove(this.Player);
             this.cancel();
          }

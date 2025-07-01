@@ -88,14 +88,14 @@ public class Main extends JavaPlugin implements Listener {
          try {
             getTypeMethod = Block.class.getMethod("getType");
          } catch (NoSuchMethodException var3) {
-            throw new RuntimeException("Method Block.getType not found", var3);
+            throw new RuntimeException("Phương thức Block.getType không thể tìm thấy", var3);
          }
       }
 
       try {
          return fixedChestMaterials.contains(((Enum)getTypeMethod.invoke(block)).name());
       } catch (InvocationTargetException | IllegalAccessException var2) {
-         throw new RuntimeException("Invoke Block.getType threw error", var2);
+         throw new RuntimeException("Gọi Block.getType gây ra lỗi", var2);
       }
    }
 
@@ -118,7 +118,7 @@ public class Main extends JavaPlugin implements Listener {
    private SoundWrapper findSound(String str, SoundWrapper defaultValue, boolean showError) {
       return SoundWrapper.createNotNull(str, defaultValue, (s) -> {
          if (showError) {
-            this.getLogger().log(Level.WARNING, "No sound was found ''{0}''", str);
+            this.getLogger().log(Level.WARNING, "Không tìm thấy âm thanh ''{0}''", str);
          }
 
          return defaultValue;
@@ -128,7 +128,7 @@ public class Main extends JavaPlugin implements Listener {
    private EffectWrapper findEffect(String str, EffectWrapper defaultValue, boolean showError) {
       return EffectWrapper.createNotNull(str, defaultValue, (s) -> {
          if (showError) {
-            this.getLogger().log(Level.WARNING, "No effect was found ''{0}''", str);
+            this.getLogger().log(Level.WARNING, "Không tìm thấy hiệu ứng ''{0}''", str);
          }
 
          return defaultValue;
@@ -172,13 +172,13 @@ public class Main extends JavaPlugin implements Listener {
             in.close();
             return false;
          } catch (IOException var10) {
-            throw new RuntimeException("Error while saving default config file", var10);
+            throw new RuntimeException("Lỗi khi lưu tệp cấu hình mặc định", var10);
          }
       }
    }
 
    private void pause(int seconds) {
-      this.getServer().getConsoleSender().sendMessage(String.format("§fPause %d seconds ...", seconds));
+      this.getServer().getConsoleSender().sendMessage(String.format("§fTạm dừng %d giây ...", seconds));
 
       try {
          TimeUnit.SECONDS.sleep((long)seconds);
@@ -206,7 +206,7 @@ public class Main extends JavaPlugin implements Listener {
             out.write(String.join(System.getProperty("line.separator"), list));
             out.close();
          } catch (IOException var7) {
-            throw new RuntimeException("Error while saving " + fileName, var7);
+            throw new RuntimeException("Lỗi khi lưu " + fileName, var7);
          }
       }
 
@@ -219,10 +219,10 @@ public class Main extends JavaPlugin implements Listener {
       this.saveLegalConstants("legal_particles.txt", "org.bukkit.Particle");
       if (!this.checkConfig()) {
          this.getPluginLoader().disablePlugin(this);
-         this.getServer().getConsoleSender().sendMessage("§c============= §bRandomLootChest WARNING §c===============");
+         this.getServer().getConsoleSender().sendMessage("§c============= §bRandomLootChest CẢNH BÁO §c===============");
          this.getServer().getConsoleSender().sendMessage("§c==§e                                                 §c==");
-         this.getServer().getConsoleSender().sendMessage("§c==§e     MISSING OR EXTRA OPTIONS IN CONFIG.YML      §c==");
-         this.getServer().getConsoleSender().sendMessage("§c==§e PLEASE, MIGRATE OPTIONS FROM CONFIG_EXAMPLE.YML §c==");
+         this.getServer().getConsoleSender().sendMessage("§c==§e     THIẾU HOẶC THỪA TÙY CHỌN TRONG CONFIG.YML      §c==");
+         this.getServer().getConsoleSender().sendMessage("§c==§e VUI LÒNG CHUYỂN TÙY CHỌN TỪ CONFIG_EXAMPLE.YML §c==");
          this.getServer().getConsoleSender().sendMessage("§c==§e                                                 §c==");
          this.getServer().getConsoleSender().sendMessage("§c========================§c§c=============================");
          this.pause(5);
@@ -230,8 +230,8 @@ public class Main extends JavaPlugin implements Listener {
          this.getPluginLoader().disablePlugin(this);
          this.getServer().getConsoleSender().sendMessage("§c================= §bRandomLootChest §c===================");
          this.getServer().getConsoleSender().sendMessage("§c==§e                                                 §c==");
-         this.getServer().getConsoleSender().sendMessage("§c==§e              PLUGIN IS DISABLED                 §c==");
-         this.getServer().getConsoleSender().sendMessage("§c==§e     YOU NEED TO CONFIGURE IT. SEE CONFIG.YML    §c==");
+         this.getServer().getConsoleSender().sendMessage("§c==§e               PLUGIN ĐÃ BỊ TẮT                  §c==");
+         this.getServer().getConsoleSender().sendMessage("§c==§e     BẠN CẦN CẤU HÌNH NÓ. XEM CONFIG.YML    §c==");
          this.getServer().getConsoleSender().sendMessage("§c==§e                                                 §c==");
          this.getServer().getConsoleSender().sendMessage("§c========================§c§c=============================");
          this.pause(5);
@@ -298,10 +298,10 @@ public class Main extends JavaPlugin implements Listener {
 
          if (!this.timer.loadChests()) {
             this.getPluginLoader().disablePlugin(this);
-            this.getServer().getConsoleSender().sendMessage("§c============== §bRandomLootChest ERROR §c================");
+            this.getServer().getConsoleSender().sendMessage("§c============== §bRandomLootChest LỖI §c================");
             this.getServer().getConsoleSender().sendMessage("§c==§e                                                 §c==");
-            this.getServer().getConsoleSender().sendMessage("§c==§e         ERROR WHILE READING DATABASE            §c==");
-            this.getServer().getConsoleSender().sendMessage("§c==§e        CORRECT OR DELETE DATABASE.YML           §c==");
+            this.getServer().getConsoleSender().sendMessage("§c==§e         LỖI KHI ĐỌC CƠ SỞ DỮ LIỆU            §c==");
+            this.getServer().getConsoleSender().sendMessage("§c==§e        SỬA HOẶC XÓA DATABASE.YML           §c==");
             this.getServer().getConsoleSender().sendMessage("§c==§e                                                 §c==");
             this.getServer().getConsoleSender().sendMessage("§c========================§c§c=============================");
             this.pause(5);
@@ -412,7 +412,7 @@ public class Main extends JavaPlugin implements Listener {
    public static World getWorld(String worldName) {
       World world = Bukkit.getServer().getWorld(worldName);
       if (world == null) {
-         pl.getServer().getConsoleSender().sendMessage(String.format("[%s] §cWorld '%s' was not found.", pl.getDescription().getName(), worldName));
+         pl.getServer().getConsoleSender().sendMessage(String.format("[%s] §cKhông tìm thấy thế giới '%s'.", pl.getDescription().getName(), worldName));
       }
 
       return world;
@@ -507,95 +507,95 @@ public class Main extends JavaPlugin implements Listener {
                   String upperWord = (isWordNegative ? word.substring(1) : word).toUpperCase();
                   byte var12 = -1;
                   switch(upperWord.hashCode()) {
-                  case -1758617780:
-                     if (upperWord.equals("_TRANSPARENT_")) {
-                        var12 = 3;
-                     }
-                     break;
-                  case -1507950486:
-                     if (upperWord.equals("_FUEL_")) {
-                        var12 = 0;
-                     }
-                     break;
-                  case -650799017:
-                     if (upperWord.equals("_BURNABLE_")) {
-                        var12 = 5;
-                     }
-                     break;
-                  case -506939991:
-                     if (upperWord.equals("_FLAMMABLE_")) {
-                        var12 = 7;
-                     }
-                     break;
-                  case -358209272:
-                     if (upperWord.equals("_OCCLUDING_")) {
-                        var12 = 2;
-                     }
-                     break;
-                  case -136163089:
-                     if (upperWord.equals("_RECORD_")) {
-                        var12 = 1;
-                     }
-                     break;
-                  case 375635633:
-                     if (upperWord.equals("_BLOCK_")) {
-                        var12 = 4;
-                     }
-                     break;
-                  case 865017939:
-                     if (upperWord.equals("_SOLID_")) {
-                        var12 = 8;
-                     }
-                     break;
-                  case 979433808:
-                     if (upperWord.equals("_GRAVITY_")) {
-                        var12 = 9;
-                     }
-                     break;
-                  case 1187709903:
-                     if (upperWord.equals("_EDIBLE_")) {
-                        var12 = 6;
-                     }
+                     case -1758617780:
+                        if (upperWord.equals("_TRANSPARENT_")) {
+                           var12 = 3;
+                        }
+                        break;
+                     case -1507950486:
+                        if (upperWord.equals("_FUEL_")) {
+                           var12 = 0;
+                        }
+                        break;
+                     case -650799017:
+                        if (upperWord.equals("_BURNABLE_")) {
+                           var12 = 5;
+                        }
+                        break;
+                     case -506939991:
+                        if (upperWord.equals("_FLAMMABLE_")) {
+                           var12 = 7;
+                        }
+                        break;
+                     case -358209272:
+                        if (upperWord.equals("_OCCLUDING_")) {
+                           var12 = 2;
+                        }
+                        break;
+                     case -136163089:
+                        if (upperWord.equals("_RECORD_")) {
+                           var12 = 1;
+                        }
+                        break;
+                     case 375635633:
+                        if (upperWord.equals("_BLOCK_")) {
+                           var12 = 4;
+                        }
+                        break;
+                     case 865017939:
+                        if (upperWord.equals("_SOLID_")) {
+                           var12 = 8;
+                        }
+                        break;
+                     case 979433808:
+                        if (upperWord.equals("_GRAVITY_")) {
+                           var12 = 9;
+                        }
+                        break;
+                     case 1187709903:
+                        if (upperWord.equals("_EDIBLE_")) {
+                           var12 = 6;
+                        }
                   }
 
                   switch(var12) {
-                  case 0:
-                     this.Fuel = true;
-                     break;
-                  case 1:
-                     this.Record = true;
-                     break;
-                  case 2:
-                     this.Occluding = true;
-                     break;
-                  case 3:
-                     this.Transparent = true;
-                     break;
-                  case 4:
-                     this.Block = true;
-                     break;
-                  case 5:
-                     this.Burnable = true;
-                     break;
-                  case 6:
-                     this.Edible = true;
-                     break;
-                  case 7:
-                     this.Flammable = true;
-                     break;
-                  case 8:
-                     this.Solid = true;
-                     break;
-                  case 9:
-                     this.Gravity = true;
-                     break;
-                  default:
-                     Material m = (Material)allMaterial.get(upperWord);
-                     if (m != null) {
-                        this.Materials.add(m);
-                     } else {
-                        Main.pl.getServer().getConsoleSender().sendMessage(String.format("§cWarning: Unknown material '§e%s§c' in condition will be skipped. Look your config.yml", upperWord));
-                     }
+                     case 0:
+                        this.Fuel = true;
+                        break;
+                     case 1:
+                        this.Record = true;
+                        break;
+                     case 2:
+                        this.Occluding = true;
+                        break;
+                     case 3:
+                        this.Transparent = true;
+                        break;
+                     case 4:
+                        this.Block = true;
+                        break;
+                     case 5:
+                        this.Burnable = true;
+                        break;
+                     case 6:
+                        this.Edible = true;
+                        break;
+                     case 7:
+                        this.Flammable = true;
+                        break;
+                     case 8:
+                        this.Solid = true;
+                        break;
+                     case 9:
+                        this.Gravity = true;
+                        break;
+                     default:
+                        Material m = (Material)allMaterial.get(upperWord);
+                        if (m != null) {
+                           this.Materials.add(m);
+                        } else {
+                           Main.pl.getServer().getConsoleSender().sendMessage(String.format("§cCảnh báo: Vật liệu không xác định '§e%s§c' trong điều kiện sẽ bị bỏ qua. Kiểm tra config.yml của bạn", upperWord));
+                        }
                   }
                }
             }

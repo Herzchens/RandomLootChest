@@ -56,12 +56,12 @@ public class Main extends JavaPlugin implements Listener {
    String MessageOnLoot;
    String MessageOnKill;
    boolean PluginenabledEnabled;
-   Main.MaterialCondition SpawnBlockCondition_Positive = new Main.MaterialCondition();
-   Main.MaterialCondition SpawnBlockCondition_Negative = new Main.MaterialCondition();
-   Main.MaterialCondition UnderBlockCondition_Positive = new Main.MaterialCondition();
-   Main.MaterialCondition UnderBlockCondition_Negative = new Main.MaterialCondition();
-   Main.MaterialCondition SideBlockCondition_Positive = new Main.MaterialCondition();
-   Main.MaterialCondition SideBlockCondition_Negative = new Main.MaterialCondition();
+   Main.MaterialCondition SpawnBlockCondition_Positive = new MaterialCondition();
+   Main.MaterialCondition SpawnBlockCondition_Negative = new MaterialCondition();
+   Main.MaterialCondition UnderBlockCondition_Positive = new MaterialCondition();
+   Main.MaterialCondition UnderBlockCondition_Negative = new MaterialCondition();
+   Main.MaterialCondition SideBlockCondition_Positive = new MaterialCondition();
+   Main.MaterialCondition SideBlockCondition_Negative = new MaterialCondition();
    HashMap<Location, RandomChestInfo> RandomChests = new HashMap();
    private static final Set<String> fixedChestMaterials = new HashSet(Arrays.asList("CHEST", "TRAPPED_CHEST", "WHITE_SHULKER_BOX", "ORANGE_SHULKER_BOX", "MAGENTA_SHULKER_BOX", "LIGHT_BLUE_SHULKER_BOX", "YELLOW_SHULKER_BOX", "LIME_SHULKER_BOX", "PINK_SHULKER_BOX", "GRAY_SHULKER_BOX", "SILVER_SHULKER_BOX", "LIGHT_GRAY_SHULKER_BOX", "CYAN_SHULKER_BOX", "SHULKER_BOX", "PURPLE_SHULKER_BOX", "BLUE_SHULKER_BOX", "BROWN_SHULKER_BOX", "GREEN_SHULKER_BOX", "RED_SHULKER_BOX", "BLACK_SHULKER_BOX"));
    private static Method getTypeMethod = null;
@@ -147,7 +147,7 @@ public class Main extends JavaPlugin implements Listener {
       FileConfiguration cfg = this.getConfig();
       Configuration org = cfg.getDefaults();
       Set<String> cfgKeys = cfg.getKeys(true);
-      Set<String> orgKeys = org.getKeys(true);
+      Set<String> orgKeys = Objects.requireNonNull(org).getKeys(true);
       if (!orgKeys.stream().anyMatch((x) -> {
          return !cfgKeys.contains(x);
       }) && !cfgKeys.stream().anyMatch((x) -> {
@@ -157,14 +157,14 @@ public class Main extends JavaPlugin implements Listener {
       } else {
          InputStream in = this.getResource("config.yml");
          File outFile = new File(this.getDataFolder(), "config_example.yml");
-         FileOutputStream out = null;
+         FileOutputStream out;
 
          try {
             out = new FileOutputStream(outFile);
             byte[] buf = new byte[1024];
 
             int len;
-            while((len = in.read(buf)) > 0) {
+            while((len = Objects.requireNonNull(in).read(buf)) > 0) {
                out.write(buf, 0, len);
             }
 
@@ -197,13 +197,13 @@ public class Main extends JavaPlugin implements Listener {
 
       File outFile = new File(this.getDataFolder(), fileName);
       if (!outFile.exists()) {
-         List<String> list = (List)Arrays.stream((Enum[])((Enum[])cls.getEnumConstants())).map(Enum::name).collect(Collectors.toList());
+         List<String> list = Arrays.stream((Enum[]) cls.getEnumConstants()).map(Enum::name).collect(Collectors.toList());
          list.sort(String::compareTo);
 
          try {
-            FileWriter out = null;
+            FileWriter out;
             out = new FileWriter(outFile);
-            out.write(String.join(System.getProperty("line.separator"), list));
+            out.write(String.join(System.lineSeparator(), list));
             out.close();
          } catch (IOException var7) {
             throw new RuntimeException("Lỗi khi lưu " + fileName, var7);
@@ -236,12 +236,12 @@ public class Main extends JavaPlugin implements Listener {
          this.pause(5);
          return;
       } else {
-         this.SpawnBlockCondition_Positive = new Main.MaterialCondition(this.getConfig().getString("SpawnBlockCondition"), false);
-         this.SpawnBlockCondition_Negative = new Main.MaterialCondition(this.getConfig().getString("SpawnBlockCondition"), true);
-         this.UnderBlockCondition_Positive = new Main.MaterialCondition(this.getConfig().getString("UnderBlockCondition"), false);
-         this.UnderBlockCondition_Negative = new Main.MaterialCondition(this.getConfig().getString("UnderBlockCondition"), true);
-         this.SideBlockCondition_Positive = new Main.MaterialCondition(this.getConfig().getString("SideBlockCondition"), false);
-         this.SideBlockCondition_Negative = new Main.MaterialCondition(this.getConfig().getString("SideBlockCondition"), true);
+         this.SpawnBlockCondition_Positive = new MaterialCondition(this.getConfig().getString("SpawnBlockCondition"), false);
+         this.SpawnBlockCondition_Negative = new MaterialCondition(this.getConfig().getString("SpawnBlockCondition"), true);
+         this.UnderBlockCondition_Positive = new MaterialCondition(this.getConfig().getString("UnderBlockCondition"), false);
+         this.UnderBlockCondition_Negative = new MaterialCondition(this.getConfig().getString("UnderBlockCondition"), true);
+         this.SideBlockCondition_Positive = new MaterialCondition(this.getConfig().getString("SideBlockCondition"), false);
+         this.SideBlockCondition_Negative = new MaterialCondition(this.getConfig().getString("SideBlockCondition"), true);
          this.MessageOnSpawn = this.getConfig().getString("MessageOnSpawn");
          this.MessageOnLoot = this.getConfig().getString("MessageOnLoot");
          this.MessageOnKill = this.getConfig().getString("MessageOnKill");
@@ -257,11 +257,11 @@ public class Main extends JavaPlugin implements Listener {
             this.MessageOnKill = null;
          }
 
-         this.RandomChestEffect = this.findEffect("MOBSPAWNER_FLAMES", (EffectWrapper)null, false);
-         this.RandomChestSound = this.findSound("NONE", (SoundWrapper)null, false);
-         this.RandomChestOpenSound = this.findSound("CHEST_OPEN|BLOCK_CHEST_OPEN", (SoundWrapper)null, false);
-         this.FixedChestEffect = this.findEffect("EXPLOSION", (EffectWrapper)null, false);
-         this.FixedChestSound = this.findSound("DIG_GRASS|BLOCK_GRASS_BREAK", (SoundWrapper)null, false);
+         this.RandomChestEffect = this.findEffect("MOBSPAWNER_FLAMES", null, false);
+         this.RandomChestSound = this.findSound("NONE", null, false);
+         this.RandomChestOpenSound = this.findSound("CHEST_OPEN|BLOCK_CHEST_OPEN", null, false);
+         this.FixedChestEffect = this.findEffect("EXPLOSION", null, false);
+         this.FixedChestSound = this.findSound("DIG_GRASS|BLOCK_GRASS_BREAK", null, false);
          this.RandomChestEffect = this.findEffect(this.getConfig().getString("RandomChestEffect"), this.RandomChestEffect, true);
          this.RandomChestSound = this.findSound(this.getConfig().getString("RandomChestSound"), this.RandomChestSound, true);
          this.RandomChestOpenSound = this.findSound(this.getConfig().getString("RandomChestOpenSound"), this.RandomChestSound, true);
@@ -288,7 +288,7 @@ public class Main extends JavaPlugin implements Listener {
             this.db.saveData();
          }
 
-         this.getCommand("rlc").setExecutor(new CommandManager());
+         Objects.requireNonNull(this.getCommand("rlc")).setExecutor(new CommandManager());
          this.getServer().getPluginManager().registerEvents(new LootEvent(), this);
          this.getServer().getPluginManager().registerEvents(new ItemAdderGui(), this);
          this.lc.loaditems();
@@ -377,7 +377,7 @@ public class Main extends JavaPlugin implements Listener {
    }
 
    void randomizeFixedChestsTimeLeft() {
-      int t = Integer.max(this.FixedChestUpdateTimeMax, Integer.max(this.FixedChestUpdateTimeMax, 0));
+      int t = Integer.max(this.FixedChestUpdateTimeMax, 0);
       Iterator var2 = this.FixedChests.entrySet().iterator();
 
       while(var2.hasNext()) {
@@ -410,8 +410,7 @@ public class Main extends JavaPlugin implements Listener {
             } else if (!this.UnderBlockCondition_Negative.isMatch(material)) {
                return false;
             } else {
-               boolean r = this.checkSide(location.add(1.0D, 1.0D, 0.0D).getBlock().getType()) && this.checkSide(location.add(-1.0D, 0.0D, 1.0D).getBlock().getType()) && this.checkSide(location.add(-1.0D, 0.0D, -1.0D).getBlock().getType()) && this.checkSide(location.add(1.0D, 0.0D, -1.0D).getBlock().getType());
-               return r;
+                return this.checkSide(location.add(1.0D, 1.0D, 0.0D).getBlock().getType()) && this.checkSide(location.add(-1.0D, 0.0D, 1.0D).getBlock().getType()) && this.checkSide(location.add(-1.0D, 0.0D, -1.0D).getBlock().getType()) && this.checkSide(location.add(1.0D, 0.0D, -1.0D).getBlock().getType());
             }
          }
       }
@@ -432,13 +431,13 @@ public class Main extends JavaPlugin implements Listener {
          return null;
       } else {
          Class<? extends BlockState> cls = blockState.getClass();
-         Method method = (Method)getInventoryMethods.get(cls);
+         Method method = getInventoryMethods.get(cls);
          if (method == null) {
             if (!getInventoryMethods.containsKey(cls)) {
                try {
                   method = cls.getMethod("getInventory");
                } catch (NoSuchMethodException var6) {
-                  getInventoryMethods.put(cls, (Method) null);
+                  getInventoryMethods.put(cls, null);
                   return null;
                }
 
@@ -447,7 +446,7 @@ public class Main extends JavaPlugin implements Listener {
                   getInventoryMethods.put(cls, method);
                   return inventory;
                } catch (InvocationTargetException | IllegalAccessException var5) {
-                  getInventoryMethods.put(cls, (Method) null);
+                  getInventoryMethods.put(cls, null);
                   return null;
                }
             } else {
@@ -478,7 +477,7 @@ public class Main extends JavaPlugin implements Listener {
       getInventoryMethods = new HashMap();
    }
 
-   private class MaterialCondition {
+   private static class MaterialCondition {
       private boolean empty = true;
       private boolean negative;
       private boolean Fuel;
@@ -499,11 +498,7 @@ public class Main extends JavaPlugin implements Listener {
       MaterialCondition(String txt, boolean negative) {
          if (txt != null) {
             this.negative = negative;
-            HashMap<String, Material> allMaterial = new HashMap((Map)Arrays.stream(Material.values()).collect(Collectors.toMap((x) -> {
-               return x.name().toUpperCase();
-            }, (x) -> {
-               return x;
-            })));
+            HashMap<String, Material> allMaterial = new HashMap(Arrays.stream(Material.values()).collect(Collectors.toMap((x) -> x.name().toUpperCase(), (x) -> x)));
             String[] var5 = txt.split("[\\s;,]+");
             int var6 = var5.length;
 
@@ -598,7 +593,7 @@ public class Main extends JavaPlugin implements Listener {
                         this.Gravity = true;
                         break;
                      default:
-                        Material m = (Material)allMaterial.get(upperWord);
+                        Material m = allMaterial.get(upperWord);
                         if (m != null) {
                            this.Materials.add(m);
                         } else {

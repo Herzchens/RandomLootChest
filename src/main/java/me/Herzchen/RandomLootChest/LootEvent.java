@@ -16,6 +16,7 @@ import org.bukkit.material.MaterialData;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 public class LootEvent implements Listener {
    Database data;
@@ -76,7 +77,7 @@ public class LootEvent implements Listener {
    public void onBlockClick(PlayerInteractEvent e) {
       Player player = e.getPlayer();
       if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-         Location location = e.getClickedBlock().getLocation();
+         Location location = Objects.requireNonNull(e.getClickedBlock()).getLocation();
          String x1;
          if (Main.isFixedChestType(e.getClickedBlock()) && Main.pl.addChestplayers.containsKey(player)) {
             CommandManager.WaitChooseChest wcc = (CommandManager.WaitChooseChest)Main.pl.addChestplayers.get(player);
@@ -176,7 +177,7 @@ public class LootEvent implements Listener {
       if (Main.isRandomChestType(block) && this.isChest(location)) {
          if (!Main.pl.abletobreak.contains(e.getPlayer())) {
             e.setCancelled(true);
-            e.getPlayer().sendMessage(Main.pl.getConfig().getString("NotAbleToBreakAchest").replaceAll("&", "§"));
+            e.getPlayer().sendMessage(Objects.requireNonNull(Main.pl.getConfig().getString("NotAbleToBreakAchest")).replaceAll("&", "§"));
          } else {
             e.setCancelled(true);
             this.deleteChest(e.getBlock().getLocation());
@@ -185,7 +186,7 @@ public class LootEvent implements Listener {
       } else if (Main.isFixedChestType(block) && Main.pl.FixedChests.containsKey(location)) {
          if (!Main.pl.abletobreak.contains(e.getPlayer())) {
             e.setCancelled(true);
-            e.getPlayer().sendMessage(Main.pl.getConfig().getString("NotAbleToBreakAchest").replaceAll("&", "§"));
+            e.getPlayer().sendMessage(Objects.requireNonNull(Main.pl.getConfig().getString("NotAbleToBreakAchest")).replaceAll("&", "§"));
          } else {
             e.setCancelled(true);
             Main.pl.FixedChests.remove(location);

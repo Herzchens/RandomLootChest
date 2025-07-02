@@ -9,6 +9,7 @@ import org.bukkit.inventory.Inventory;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,17 +35,17 @@ class Timer {
       while(var1.hasNext()) {
          String s = (String)var1.next();
          if (!s.contains(".")) {
-            World world = Main.getWorld(this.chests().getConfigurationSection(s).getString("World"));
+            World world = Main.getWorld(Objects.requireNonNull(this.chests().getConfigurationSection(s)).getString("World"));
             if (world == null) {
                return false;
             }
 
-            x = this.chests().getConfigurationSection(s).getInt("X");
-            int y = this.chests().getConfigurationSection(s).getInt("Y");
-            x = this.chests().getConfigurationSection(s).getInt("Z");
+             Objects.requireNonNull(this.chests().getConfigurationSection(s)).getInt("X");
+             int y = Objects.requireNonNull(this.chests().getConfigurationSection(s)).getInt("Y");
+            x = Objects.requireNonNull(this.chests().getConfigurationSection(s)).getInt("Z");
             Location loc = new Location(world, (double)x, (double)y, (double)x);
-            z = this.chests().getConfigurationSection(s).getInt("TimeToDelete");
-            String block = this.chests().getConfigurationSection(s).getString("Block", "AIR");
+            z = Objects.requireNonNull(this.chests().getConfigurationSection(s)).getInt("TimeToDelete");
+            String block = Objects.requireNonNull(this.chests().getConfigurationSection(s)).getString("Block", "AIR");
             Main.pl.RandomChests.put(loc, new RandomChestInfo(z, block));
             this.chests().set(s, (Object)null);
          }
@@ -59,7 +60,7 @@ class Timer {
          while(var12.hasNext()) {
             String key = (String)var12.next();
             ConfigurationSection data = section.getConfigurationSection(key);
-            World world = Main.getWorld(data.getString("World"));
+            World world = Main.getWorld(Objects.requireNonNull(data).getString("World"));
             if (world == null) {
                return false;
             }
@@ -88,12 +89,12 @@ class Timer {
          Entry<Location, RandomChestInfo> e = (Entry)var3.next();
          Location loc = (Location)e.getKey();
          this.chests().createSection("Chest" + counter);
-         this.chests().getConfigurationSection("Chest" + counter).set("World", loc.getWorld().getName());
-         this.chests().getConfigurationSection("Chest" + counter).set("X", loc.getBlockX());
-         this.chests().getConfigurationSection("Chest" + counter).set("Y", loc.getBlockY());
-         this.chests().getConfigurationSection("Chest" + counter).set("Z", loc.getBlockZ());
-         this.chests().getConfigurationSection("Chest" + counter).set("TimeToDelete", ((RandomChestInfo)e.getValue()).Time);
-         this.chests().getConfigurationSection("Chest" + counter).set("Block", ((RandomChestInfo)e.getValue()).Block);
+         Objects.requireNonNull(this.chests().getConfigurationSection("Chest" + counter)).set("World", loc.getWorld().getName());
+         Objects.requireNonNull(this.chests().getConfigurationSection("Chest" + counter)).set("X", loc.getBlockX());
+         Objects.requireNonNull(this.chests().getConfigurationSection("Chest" + counter)).set("Y", loc.getBlockY());
+         Objects.requireNonNull(this.chests().getConfigurationSection("Chest" + counter)).set("Z", loc.getBlockZ());
+         Objects.requireNonNull(this.chests().getConfigurationSection("Chest" + counter)).set("TimeToDelete", ((RandomChestInfo)e.getValue()).Time);
+         Objects.requireNonNull(this.chests().getConfigurationSection("Chest" + counter)).set("Block", ((RandomChestInfo)e.getValue()).Block);
       }
 
       this.data.data.set("FixedChests", (Object)null);

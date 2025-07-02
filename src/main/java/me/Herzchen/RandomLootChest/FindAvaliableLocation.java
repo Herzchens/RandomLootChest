@@ -5,17 +5,19 @@ import org.bukkit.World;
 
 import java.util.Random;
 
-public class FindAvaliableLocation {
-   static FindAvaliableLocation instance = new FindAvaliableLocation();
-   static int biggestx;
-   static int smallestx;
-   static int biggestz;
-   static int smallestz;
-   static int biggesty;
-   static int smallesty;
-   static World world;
-   static int worldMaxY;
+public final class FindAvaliableLocation {
+
+   private static int biggestx;
+   private static int smallestx;
+   private static int biggestz;
+   private static int smallestz;
+   private static int biggesty;
+   private static int smallesty;
+   private static World world;
+   private static int worldMaxY;
    private static boolean inited = false;
+
+   private FindAvaliableLocation() { }
 
    public static boolean init() {
       if (inited) {

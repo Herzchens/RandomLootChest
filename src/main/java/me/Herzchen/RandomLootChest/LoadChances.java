@@ -3,6 +3,8 @@ package me.Herzchen.RandomLootChest;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Objects;
+
 public class LoadChances {
    static LoadChances instance = new LoadChances();
 
@@ -18,8 +20,8 @@ public class LoadChances {
       this.clear();
 
       for(int i = 0; i < 100000 && this.itdb().isConfigurationSection(String.valueOf(i)); ++i) {
-         ItemStack item = this.itdb().getConfigurationSection(String.valueOf(i)).getItemStack("item");
-         int chance = this.itdb().getConfigurationSection(String.valueOf(i)).getInt("chance");
+         ItemStack item = Objects.requireNonNull(this.itdb().getConfigurationSection(String.valueOf(i))).getItemStack("item");
+         int chance = Objects.requireNonNull(this.itdb().getConfigurationSection(String.valueOf(i))).getInt("chance");
 
          for(int j = 0; j < chance; ++j) {
             for(int k = 0; k < 32000; ++k) {

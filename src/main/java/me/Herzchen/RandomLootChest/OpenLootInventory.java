@@ -6,6 +6,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Objects;
 import java.util.Random;
 
 public class OpenLootInventory {
@@ -15,8 +16,8 @@ public class OpenLootInventory {
       int all = Main.items.size();
       if (all != 0) {
          Random air1 = new Random();
-         int ra = air1.nextInt(all) + 0;
-         ItemStack item = (ItemStack)Main.items.get(ra);
+         int ra = air1.nextInt(all);
+         ItemStack item = Main.items.get(ra);
          return item;
       } else {
          ItemStack air = new ItemStack(Material.AIR);
@@ -30,7 +31,7 @@ public class OpenLootInventory {
 
       for(int i = 0; i < size; ++i) {
          Random random = new Random();
-         int ra = random.nextInt(size) + 0;
+         int ra = random.nextInt(size);
          if (inv.getItem(ra) == null) {
             current = ra;
             break;
@@ -41,9 +42,9 @@ public class OpenLootInventory {
    }
 
    public void openInvenory(Player player) {
-      String invname = Main.pl.getConfig().getString("Inventory_Name").replaceAll("&", "§");
+      String invname = Objects.requireNonNull(Main.pl.getConfig().getString("Inventory_Name")).replaceAll("&", "§");
       int slots = Main.pl.getConfig().getInt("Inventory_Slots");
-      Inventory inv = Main.pl.getServer().createInventory((InventoryHolder)null, slots, invname);
+      Inventory inv = Main.pl.getServer().createInventory(null, slots, invname);
       fillInvenory(inv);
       player.openInventory(inv);
    }

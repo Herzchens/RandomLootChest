@@ -44,16 +44,9 @@ public class SoundWrapper {
       }
    }
 
-   public static SoundWrapper create(String soundName, Function<String, SoundWrapper> notFound) {
-      return create(soundName, notFound);
-   }
-
    public static SoundWrapper createNotNull(String soundName, SoundWrapper defaultValue, Function<String, SoundWrapper> notFound) {
       SoundWrapper effect = create(soundName, defaultValue, notFound);
       return effect != null ? effect : new SoundWrapper((Sound)null);
    }
 
-   public static SoundWrapper createNotNull(String soundName, Function<String, SoundWrapper> notFound) {
-      return createNotNull(soundName, notFound);
-   }
 }

@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 public class CommandManager implements CommandExecutor {
-   int num = 0;
    ItemAdderGui itg = new ItemAdderGui();
    GenerateChest gc = new GenerateChest();
    LoadChances lc;
@@ -134,7 +133,7 @@ public class CommandManager implements CommandExecutor {
                }
 
                player = (Player)sender;
-               (new CommandManager.WaitChooseChest()).start(player, "add");
+               (new WaitChooseChest()).start(player, "add");
             } else if (args[0].equalsIgnoreCase("delchest")) {
                if (!sender.hasPermission("randomlootchest.fixedchest")) {
                   sender.sendMessage("§cKhông đủ quyền hạn.");
@@ -142,7 +141,7 @@ public class CommandManager implements CommandExecutor {
                }
 
                player = (Player)sender;
-               (new CommandManager.WaitChooseChest()).start(player, "del");
+               (new WaitChooseChest()).start(player, "del");
             } else if (args[0].equalsIgnoreCase("delall")) {
                if (sender instanceof Player && !sender.hasPermission("randomlootchest.delall")) {
                   sender.sendMessage("§cKhông đủ quyền hạn.");
@@ -187,7 +186,7 @@ public class CommandManager implements CommandExecutor {
       return false;
    }
 
-   public class WaitChooseChest extends BukkitRunnable {
+   public static class WaitChooseChest extends BukkitRunnable {
       int Left = 4;
       Player Player;
       String Command;

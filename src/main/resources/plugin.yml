@@ -39,7 +39,4 @@ permissions:
 commands:
   rlc:
     description: Main command for RandomLootChest
-    usage: |
-      /rlc [subcommand]
-      Subcommands: additem, addchest, delchest, delall, killall, togglebreak, forcespawn, rndtime
     aliases: [randomlootchest]

@@ -3,9 +3,9 @@
 ## 📖 Giới thiệu
 
 Chào mừng bạn đến với dự án **RandomLootChest Recode**! 🎮
+**Đây là plugin được recode dựa trên [RandomLootChest](https://www.spigotmc.org/resources/%E2%98%85random-loot-chest%E2%98%85.26009/)**
 
-Đây là một dự án tái tạo lại plugin đã ngừng cập nhật, được phát triển với mục tiêu mang lại trải nghiệm tốt nhất cho cộng đồng Minecraft. Chúng tôi đã dành nhiều thời gian và công sức để nghiên cứu, tối ưu hóa và nâng cấp plugin cũ, đảm bảo tương thích với các phiên bản Minecraft mới nhất.
-
+Đây là một dự án tái tạo lại plugin đã ngừng cập nhật, được phát triển với mục tiêu mang lại trải nghiệm tốt nhất cho cộng đồng Minecraft. Mình đã cập nhật plugin lên bản 1.18+ để có thể tương thích tốt hơn
 ## ✨ Tính năng chính
 
 - 🚀 **Hiệu suất được tối ưu hóa** - Code được viết lại hoàn toàn để đảm bảo hiệu suất tốt nhất

@@ -1,6 +1,5 @@
 package me.Herzchen.RandomLootChest;
 
-import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -94,11 +93,9 @@ public class ItemAdderGui implements Listener {
       Main.pl.chances.put(id, currentchance - chancetoremove);
    }
 
-   public void additems(Player player, int page) {
-      Inventory inv = player.getOpenInventory().getTopInventory();
-
-      ItemStack arrow = XMaterial.ARROW.parseItem();
-      ItemMeta arrowmeta = Objects.requireNonNull(arrow).getItemMeta();
+   public void additems(Inventory inv, int page) {
+      ItemStack arrow = new ItemStack(Material.ARROW);
+      ItemMeta arrowmeta = arrow.getItemMeta();
       arrowmeta.setDisplayName("§cQuay lại");
       arrow.setItemMeta(arrowmeta);
       inv.setItem(45, arrow);
@@ -107,17 +104,14 @@ public class ItemAdderGui implements Listener {
       arrow.setItemMeta(arrowmeta);
       inv.setItem(53, arrow);
 
-      ItemStack paper = XMaterial.PAPER.parseItem();
+      ItemStack paper = new ItemStack(Material.PAPER);
       ItemMeta papermeta = getItemMeta(paper);
-      Objects.requireNonNull(paper).setItemMeta(papermeta);
+      paper.setItemMeta(papermeta);
       inv.setItem(49, paper);
 
-      int maxnumber;
-      int firstnumber;
-       firstnumber = page * 45 - 45;
-       maxnumber = page * 45;
-
-       int slotcounter = 0;
+      int firstnumber = page * 45 - 45;
+      int maxnumber = page * 45;
+      int slotcounter = 0;
 
       for(int glass = firstnumber; glass < maxnumber; ++glass) {
          if (Main.pl.itemstoadd.get(glass) != null) {
@@ -126,8 +120,8 @@ public class ItemAdderGui implements Listener {
          ++slotcounter;
       }
 
-      ItemStack grayPane = XMaterial.GRAY_STAINED_GLASS_PANE.parseItem();
-      ItemMeta glassmeta = Objects.requireNonNull(grayPane).getItemMeta();
+      ItemStack grayPane = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+      ItemMeta glassmeta = grayPane.getItemMeta();
       glassmeta.setDisplayName(" ");
       grayPane.setItemMeta(glassmeta);
 
@@ -140,7 +134,7 @@ public class ItemAdderGui implements Listener {
    }
 
    private static @NotNull ItemMeta getItemMeta(ItemStack paper) {
-      ItemMeta papermeta = Objects.requireNonNull(paper).getItemMeta();
+      ItemMeta papermeta = paper.getItemMeta();
       papermeta.setDisplayName("§6Thông tin:");
       List<String> lore = new ArrayList<>();
       lore.add("§aĐể thêm vật phẩm vào rương");
@@ -158,8 +152,8 @@ public class ItemAdderGui implements Listener {
       Inventory inv = Bukkit.createInventory(null, 54, "§8Trang: " + page + "/5");
       Main.pl.additem.add(player);
       Main.pl.currentpage.put(player, page);
+      this.additems(inv, page);
       player.openInventory(inv);
-      this.additems(player, page);
    }
 
    public void openGui(Player player) {
@@ -256,7 +250,7 @@ public class ItemAdderGui implements Listener {
                player.sendMessage("§cTỷ lệ không thể lớn hơn 100");
             } else {
                this.addchance(id, chancetoadd);
-               inv1.setItem(13, this.item(Objects.requireNonNull(XMaterial.DIAMOND.parseItem()), "§6Tỷ lệ hiện tại: §c" + Main.pl.chances.get(id)));
+               inv1.setItem(13, this.item(new ItemStack(Material.DIAMOND), "§6Tỷ lệ hiện tại: §c" + Main.pl.chances.get(id)));
             }
          } else if (displayName.contains("Xóa")) {
             int chancetoremove = this.chancetoaddorremove(e.getCurrentItem());
@@ -264,33 +258,26 @@ public class ItemAdderGui implements Listener {
                player.sendMessage("§cTỷ lệ không thể nhỏ hơn 1");
             } else {
                this.remove(id, chancetoremove);
-               inv1.setItem(13, this.item(Objects.requireNonNull(XMaterial.DIAMOND.parseItem()), "§6Tỷ lệ hiện tại: §c" + Main.pl.chances.get(id)));
+               inv1.setItem(13, this.item(new ItemStack(Material.DIAMOND), "§6Tỷ lệ hiện tại: §c" + Main.pl.chances.get(id)));
             }
          }
       }
    }
 
    public void save(Inventory inv, int page) {
-      int maplast;
-      int mapfirst;
-      if (page == 1) {
-         maplast = page * 45;
-         mapfirst = 0;
-      } else {
-         mapfirst = page * 45 - 45;
-         maplast = page * 45;
-      }
-
+      int mapfirst = page * 45 - 45;
+      int maplast = page * 45;
       int slotcounter = 0;
 
       for(int i = mapfirst; i < maplast; ++i) {
-         Main.pl.itemstoadd.remove(i);
-         if (inv.getItem(slotcounter) != null) {
-            this.addOnMap(inv.getItem(slotcounter));
+         ItemStack item = inv.getItem(slotcounter);
+         if (item != null) {
+            Main.pl.itemstoadd.put(i, item);
+         } else {
+            Main.pl.itemstoadd.remove(i);
          }
          ++slotcounter;
       }
-
       this.saveItems();
    }
 
@@ -299,30 +286,30 @@ public class ItemAdderGui implements Listener {
       Main.pl.lastpageno.put(player, currentpage);
       Inventory inv = Bukkit.createInventory(null, 27, "§aChỉnh sửa tỷ lệ");
 
-      ItemStack add50 = XMaterial.GREEN_STAINED_GLASS_PANE.parseItem();
-      inv.setItem(10, this.item(Objects.requireNonNull(add50), "§aThêm 50"));
+      ItemStack add50 = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
+      inv.setItem(10, this.item(add50, "§aThêm 50"));
 
-      ItemStack add10 = XMaterial.GREEN_STAINED_GLASS_PANE.parseItem();
-      inv.setItem(11, this.item(Objects.requireNonNull(add10), "§aThêm 10"));
+      ItemStack add10 = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
+      inv.setItem(11, this.item(add10, "§aThêm 10"));
 
-      ItemStack add1 = XMaterial.GREEN_STAINED_GLASS_PANE.parseItem();
-      inv.setItem(12, this.item(Objects.requireNonNull(add1), "§aThêm 1"));
+      ItemStack add1 = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
+      inv.setItem(12, this.item(add1, "§aThêm 1"));
 
-      inv.setItem(13, this.item(Objects.requireNonNull(XMaterial.DIAMOND.parseItem()), "§6Tỷ lệ hiện tại: §c" + Main.pl.chances.get(itemid)));
+      inv.setItem(13, this.item(new ItemStack(Material.DIAMOND), "§6Tỷ lệ hiện tại: §c" + Main.pl.chances.get(itemid)));
 
-      ItemStack remove1 = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
-      inv.setItem(14, this.item(Objects.requireNonNull(remove1), "§aXóa 1"));
+      ItemStack remove1 = new ItemStack(Material.RED_STAINED_GLASS_PANE);
+      inv.setItem(14, this.item(remove1, "§aXóa 1"));
 
-      ItemStack remove10 = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
-      inv.setItem(15, this.item(Objects.requireNonNull(remove10), "§aXóa 10"));
+      ItemStack remove10 = new ItemStack(Material.RED_STAINED_GLASS_PANE);
+      inv.setItem(15, this.item(remove10, "§aXóa 10"));
 
-      ItemStack remove50 = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
-      inv.setItem(16, this.item(Objects.requireNonNull(remove50), "§aXóa 50"));
+      ItemStack remove50 = new ItemStack(Material.RED_STAINED_GLASS_PANE);
+      inv.setItem(16, this.item(remove50, "§aXóa 50"));
 
-      inv.setItem(18, this.item(Objects.requireNonNull(XMaterial.ARROW.parseItem()), "§cQuay lại"));
+      inv.setItem(18, this.item(new ItemStack(Material.ARROW), "§cQuay lại"));
 
-      ItemStack grayPane = XMaterial.GRAY_STAINED_GLASS_PANE.parseItem();
-      this.item(Objects.requireNonNull(grayPane), " ");
+      ItemStack grayPane = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+      this.item(grayPane, " ");
       for(int i = 0; i < 27; ++i) {
          if (inv.getItem(i) == null) {
             inv.setItem(i, grayPane);

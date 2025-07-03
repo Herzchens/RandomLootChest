@@ -9,7 +9,11 @@ import org.bukkit.block.BlockState;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -107,12 +111,88 @@ public class Main extends JavaPlugin implements Listener {
       return RANDOM_CHEST_TYPE.equals(material);
    }
 
+   public static class Selection {
+      public Location pos1;
+      public Location pos2;
+   }
+
+   public static HashMap<UUID, Selection> selections = new HashMap<>();
+
    static boolean isRandomChestType(Block block) {
       return isRandomChestType(block.getType());
    }
 
    static boolean isRandomChestType(Location location) {
       return isRandomChestType(location.getBlock());
+   }
+
+   public class WandListener implements Listener {
+      @EventHandler
+      public void onPlayerInteract(PlayerInteractEvent e) {
+         Player player = e.getPlayer();
+         ItemStack item = player.getInventory().getItemInMainHand();
+
+         if (!item.hasItemMeta() ||
+                 !item.getItemMeta().getDisplayName().equals("§6RLC Wand")) {
+            return;
+         }
+
+         if (!player.hasPermission("randomlootchest.select")) {
+            player.sendMessage("§cKhông đủ quyền!");
+            return;
+         }
+
+         Block clickedBlock = e.getClickedBlock();
+         if (clickedBlock == null) return;
+
+         if (Main.isFixedChestType(clickedBlock)) {
+            Location loc = clickedBlock.getLocation();
+            if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
+               Main.pl.FixedChests.put(loc,
+                       FindAvaliableLocation.getRandom(
+                               Main.pl.FixedChestUpdateTimeMin,
+                               Main.pl.FixedChestUpdateTimeMax
+                       )
+               );
+               player.sendMessage("§aĐã set rương thành RLC chest!");
+            }
+            else if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+               Main.pl.FixedChests.remove(loc);
+               player.sendMessage("§aĐã unset rương!");
+            }
+            e.setCancelled(true);
+            return;
+         }
+
+         Selection sel = Main.selections.getOrDefault(
+                 player.getUniqueId(),
+                 new Selection()
+         );
+
+         if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
+            sel.pos1 = clickedBlock.getLocation();
+            player.sendMessage("§aĐã đặt pos1 tại: " + formatLocation(sel.pos1));
+         }
+         else if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            sel.pos2 = clickedBlock.getLocation();
+            player.sendMessage("§aĐã đặt pos2 tại: " + formatLocation(sel.pos2));
+         }
+
+         Main.selections.put(player.getUniqueId(), sel);
+         e.setCancelled(true);
+      }
+
+      private String formatLocation(Location loc) {
+         return String.format("X: %d, Y: %d, Z: %d",
+                 loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+      }
+   }
+
+   public class QuitListener implements Listener {
+      @EventHandler
+      public void onPlayerQuit(PlayerQuitEvent e) {
+         selections.remove(e.getPlayer().getUniqueId());
+      }
    }
 
    private SoundWrapper findSound(String str, SoundWrapper defaultValue, boolean showError) {
@@ -292,6 +372,10 @@ public class Main extends JavaPlugin implements Listener {
          Objects.requireNonNull(this.getCommand("rlc")).setTabCompleter(new TabComplete());
          this.getServer().getPluginManager().registerEvents(new LootEvent(), this);
          this.getServer().getPluginManager().registerEvents(new ItemAdderGui(), this);
+
+         this.getServer().getPluginManager().registerEvents(new WandListener(), this);
+         this.getServer().getPluginManager().registerEvents(new QuitListener(), this);
+
          this.lc.loaditems();
          if (this.getConfig().getList("CommandsToExecuteOnLoot") != null) {
             this.commands = (ArrayList)this.getConfig().getStringList("CommandsToExecuteOnLoot");
@@ -411,7 +495,7 @@ public class Main extends JavaPlugin implements Listener {
             } else if (!this.UnderBlockCondition_Negative.isMatch(material)) {
                return false;
             } else {
-                return this.checkSide(location.add(1.0D, 1.0D, 0.0D).getBlock().getType()) && this.checkSide(location.add(-1.0D, 0.0D, 1.0D).getBlock().getType()) && this.checkSide(location.add(-1.0D, 0.0D, -1.0D).getBlock().getType()) && this.checkSide(location.add(1.0D, 0.0D, -1.0D).getBlock().getType());
+               return this.checkSide(location.add(1.0D, 1.0D, 0.0D).getBlock().getType()) && this.checkSide(location.add(-1.0D, 0.0D, 1.0D).getBlock().getType()) && this.checkSide(location.add(-1.0D, 0.0D, -1.0D).getBlock().getType()) && this.checkSide(location.add(1.0D, 0.0D, -1.0D).getBlock().getType());
             }
          }
       }

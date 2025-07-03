@@ -21,6 +21,10 @@ public class TabComplete implements TabCompleter {
         put("togglebreak", "randomlootchest.togglebreak");
         put("forcespawn", "randomlootchest.forcespawn");
         put("rndtime", "randomlootchest.rndtime");
+        // Thêm các subcommand mới
+        put("wand", "randomlootchest.command.wand");
+        put("set", "randomlootchest.command.set");
+        put("unset", "randomlootchest.command.unset");
     }};
 
     private static final List<String> CONSOLE_ONLY = Arrays.asList(
@@ -29,7 +33,7 @@ public class TabComplete implements TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-         if (!command.getName().equalsIgnoreCase("rlc")) {
+        if (!command.getName().equalsIgnoreCase("rlc")) {
             return null;
         }
 

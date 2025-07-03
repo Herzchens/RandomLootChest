@@ -2,7 +2,44 @@ name: RandomLootChest
 author: Herzchen
 authors: [bottomdumber, RestrictedPower]
 version: 3.2.0 X
+api-version: 1.13
 main: me.Herzchen.RandomLootChest.Main
 softdepend: [Multiverse-Core]
+
+permissions:
+  randomlootchest.*:
+    description: Gives access to all RandomLootChest commands
+    children:
+      randomlootchest.general: true
+      randomlootchest.additem: true
+      randomlootchest.fixedchest: true
+      randomlootchest.delall: true
+      randomlootchest.killall: true
+      randomlootchest.togglebreak: true
+      randomlootchest.forcespawn: true
+      randomlootchest.rndtime: true
+
+  randomlootchest.general:
+    description: Access to general commands
+  randomlootchest.additem:
+    description: Access to additem command
+  randomlootchest.fixedchest:
+    description: Access to add/del chest commands
+  randomlootchest.delall:
+    description: Access to delall command
+  randomlootchest.killall:
+    description: Access to killall command
+  randomlootchest.togglebreak:
+    description: Access to togglebreak command
+  randomlootchest.forcespawn:
+    description: Access to forcespawn command
+  randomlootchest.rndtime:
+    description: Access to rndtime command
+
 commands:
   rlc:
+    description: Main command for RandomLootChest
+    usage: |
+      /rlc [subcommand]
+      Subcommands: additem, addchest, delchest, delall, killall, togglebreak, forcespawn, rndtime
+    aliases: [randomlootchest]

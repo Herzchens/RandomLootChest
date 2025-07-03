@@ -289,6 +289,7 @@ public class Main extends JavaPlugin implements Listener {
          }
 
          Objects.requireNonNull(this.getCommand("rlc")).setExecutor(new CommandManager());
+         Objects.requireNonNull(this.getCommand("rlc")).setTabCompleter(new TabComplete());
          this.getServer().getPluginManager().registerEvents(new LootEvent(), this);
          this.getServer().getPluginManager().registerEvents(new ItemAdderGui(), this);
          this.lc.loaditems();
@@ -597,7 +598,7 @@ public class Main extends JavaPlugin implements Listener {
                         if (m != null) {
                            this.Materials.add(m);
                         } else {
-                           Main.pl.getServer().getConsoleSender().sendMessage(String.format("§cCảnh báo: Vật liệu không xác định '§e%s§c' trong điều kiện sẽ bị bỏ qua. Kiểm tra config.yml của bạn", upperWord));
+                           Main.pl.getServer().getConsoleSender().sendMessage(String.format("§ccảnh báo: Vật liệu không xác định '§e%s§c' trong điều kiện sẽ bị bỏ qua. Kiểm tra config.yml của bạn", upperWord));
                         }
                   }
                }

@@ -1,7 +1,7 @@
 name: RandomLootChest
 author: Herzchen
 authors: [bottomdumber, RestrictedPower]
-version: 3.2.0 X
+version: 3.3.0
 api-version: 1.13
 main: me.Herzchen.RandomLootChest.Main
 softdepend: [Multiverse-Core]
@@ -18,6 +18,9 @@ permissions:
       randomlootchest.togglebreak: true
       randomlootchest.forcespawn: true
       randomlootchest.rndtime: true
+      randomlootchest.wand: true
+      randomlootchest.set: true
+      randomlootchest.unset: true
 
   randomlootchest.general:
     description: Access to general commands
@@ -35,6 +38,12 @@ permissions:
     description: Access to forcespawn command
   randomlootchest.rndtime:
     description: Access to rndtime command
+  randomlootchest.wand:
+    description: Access to use wand command
+  randomlootchest.set:
+    description: Access to set command
+  randomlootchest.unset:
+    description: Access to unset command
 
 commands:
   rlc:

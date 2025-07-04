@@ -1,9 +1,11 @@
 package me.Herzchen.RandomLootChest;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,7 +13,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.material.MaterialData;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,35 +33,31 @@ public class LootEvent implements Listener {
    }
 
    public void deleteChest(Location loc) {
-      RandomChestInfo value = (RandomChestInfo)Main.pl.RandomChests.get(loc);
+      RandomChestInfo value = Main.pl.RandomChests.get(loc);
       Main.pl.RandomChests.remove(loc);
-      MaterialData md = this.parseMaterialData(value.Block);
+      BlockData blockData = this.parseBlockData(value.Block);
       Block block = loc.getBlock();
+      block.setBlockData(blockData);
       BlockState blockState = block.getState();
-      blockState.setType(md.getItemType());
-      blockState.setData(md);
       blockState.update(true);
    }
 
-   MaterialData parseMaterialData(String s) {
+   BlockData parseBlockData(String s) {
       if (s != null) {
-         String[] p = s.split(":");
-         Material material = Material.matchMaterial(p[0]);
-         if (material != null) {
-            MaterialData md = new MaterialData(material);
-            if (p.length > 1) {
-               try {
-                  int d = Integer.parseInt(p[1]);
-                  md.setData((byte)d);
-               } catch (Exception var6) {
-               }
-
-               return md;
+         if (s.startsWith("LEGACY_")) {
+            String materialName = s.split(":")[0].replace("LEGACY_", "");
+            Material material = Material.matchMaterial(materialName, true);
+            if (material != null) {
+               return material.createBlockData();
             }
          }
+         try {
+            return Bukkit.createBlockData(s);
+         } catch (IllegalArgumentException e) {
+            return Material.AIR.createBlockData();
+         }
       }
-
-      return new MaterialData(Material.AIR);
+      return Material.AIR.createBlockData();
    }
 
    public void killallchests() {
@@ -87,54 +84,54 @@ public class LootEvent implements Listener {
                x1 = wcc.Command;
                byte var15 = -1;
                switch(x1.hashCode()) {
-               case 96417:
-                  if (x1.equals("add")) {
-                     var15 = 0;
-                  }
-                  break;
-               case 99339:
-                  if (x1.equals("del")) {
-                     var15 = 1;
-                  }
+                  case 96417:
+                     if (x1.equals("add")) {
+                        var15 = 0;
+                     }
+                     break;
+                  case 99339:
+                     if (x1.equals("del")) {
+                        var15 = 1;
+                     }
                }
 
                Inventory inventory;
                switch(var15) {
-               case 0:
-                  if (!Main.pl.FixedChests.containsKey(location)) {
-                     BlockState blockState = location.getBlock().getState();
-                     inventory = Main.getInventory(blockState);
-                     if (inventory != null) {
-                        inventory.clear();
-                        OpenLootInventory.fillInvenory(inventory);
-                        Main.pl.FixedChests.put(location, FindAvaliableLocation.getRandom(1, FindAvaliableLocation.getRandom(1, Integer.max(FindAvaliableLocation.getRandom(Main.pl.FixedChestUpdateTimeMin, Main.pl.FixedChestUpdateTimeMax), 0))));
-                        Main.pl.FixedChestSound.play(location);
-                        Main.pl.FixedChestEffect.play(location);
-                        player.sendMessage("§arương cố định đã được thêm vào bộ sưu tập §f=)");
-                     } else {
-                        player.sendMessage("§cCó gì đó không ổn §f=(");
-                     }
-                  } else {
-                     player.sendMessage("§cOops... rương này đã được thêm vào rồi §f=\\");
-                  }
-                  break;
-               case 1:
-                  if (Main.pl.FixedChests.containsKey(location)) {
-                     Main.pl.FixedChests.remove(location);
-                     Block block = location.getBlock();
-                     if (Main.isFixedChestType(block)) {
-                        inventory = Main.getInventory(location);
+                  case 0:
+                     if (!Main.pl.FixedChests.containsKey(location)) {
+                        BlockState blockState = location.getBlock().getState();
+                        inventory = Main.getInventory(blockState);
                         if (inventory != null) {
                            inventory.clear();
+                           OpenLootInventory.fillInvenory(inventory);
+                           Main.pl.FixedChests.put(location, FindAvaliableLocation.getRandom(1, FindAvaliableLocation.getRandom(1, Integer.max(FindAvaliableLocation.getRandom(Main.pl.FixedChestUpdateTimeMin, Main.pl.FixedChestUpdateTimeMax), 0))));
                            Main.pl.FixedChestSound.play(location);
                            Main.pl.FixedChestEffect.play(location);
+                           player.sendMessage("§arương cố định đã được thêm vào bộ sưu tập §f=)");
+                        } else {
+                           player.sendMessage("§cCó gì đó không ổn §f=(");
                         }
+                     } else {
+                        player.sendMessage("§cOops... rương này đã được thêm vào rồi §f=\\");
                      }
+                     break;
+                  case 1:
+                     if (Main.pl.FixedChests.containsKey(location)) {
+                        Main.pl.FixedChests.remove(location);
+                        Block block = location.getBlock();
+                        if (Main.isFixedChestType(block)) {
+                           inventory = Main.getInventory(location);
+                           if (inventory != null) {
+                              inventory.clear();
+                              Main.pl.FixedChestSound.play(location);
+                              Main.pl.FixedChestEffect.play(location);
+                           }
+                        }
 
-                     player.sendMessage("§arương cố định đã bị xóa khỏi bộ sưu tập §f=)");
-                  } else {
-                     player.sendMessage("§cOops... Cái rương này không phải của chúng ta §f=\\");
-                  }
+                        player.sendMessage("§arương cố định đã bị xóa khỏi bộ sưu tập §f=)");
+                     } else {
+                        player.sendMessage("§cOops... Cái rương này không phải của chúng ta §f=\\");
+                     }
                }
             }
 

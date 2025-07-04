@@ -132,15 +132,13 @@ public class CommandManager implements CommandExecutor {
 
                if (!player.hasPermission("randomlootchest.command.set")) {
                   player.sendMessage("§cKhông đủ quyền hạn!");
-                  handled = true;
-                  return true;
+                   return true;
                }
 
                Main.Selection sel = Main.selections.get(player.getUniqueId());
                if (sel == null || sel.pos1 == null || sel.pos2 == null) {
                   player.sendMessage("§cVui lòng chọn vùng bằng wand trước!");
-                  handled = true;
-                  return true;
+                   return true;
                }
 
                int count = 0;
@@ -182,28 +180,24 @@ public class CommandManager implements CommandExecutor {
                } else {
                   player.sendMessage("§eKhông tìm thấy rương nào trong vùng được chọn!");
                }
-               handled = true;
-               return true;
+                return true;
             }
             else if (args[0].equalsIgnoreCase("unset")) {
                if (!(sender instanceof Player)) {
                   sender.sendMessage("§cChỉ người chơi được dùng lệnh này");
-                  handled = true;
-                  return true;
+                   return true;
                }
                player = (Player) sender;
 
                if (!player.hasPermission("randomlootchest.command.unset")) {
                   player.sendMessage("§cKhông đủ quyền hạn!");
-                  handled = true;
-                  return true;
+                   return true;
                }
 
                Main.Selection sel = Main.selections.get(player.getUniqueId());
                if (sel == null || sel.pos1 == null || sel.pos2 == null) {
                   player.sendMessage("§cVui lòng chọn vùng bằng wand trước!");
-                  handled = true;
-                  return true;
+                   return true;
                }
 
                int count = 0;
@@ -240,21 +234,18 @@ public class CommandManager implements CommandExecutor {
                } else {
                   player.sendMessage("§eKhông tìm thấy rương nào trong vùng được chọn!");
                }
-               handled = true;
-               return true;
+                return true;
             }
             else if (args[0].equalsIgnoreCase("togglebreak")) {
                if (!(sender instanceof Player)) {
                   this.sendconsolehelp((ConsoleCommandSender)sender);
-                  handled = true;
-                  return false;
+                   return false;
                }
 
                player = (Player)sender;
                if (!player.hasPermission("randomlootchest.togglebreak")) {
                   player.sendMessage("§cKhông đủ quyền hạn.");
-                  handled = true;
-                  return false;
+                   return false;
                }
 
                if (Main.pl.abletobreak.contains(player)) {
@@ -268,8 +259,7 @@ public class CommandManager implements CommandExecutor {
             } else if (args[0].equalsIgnoreCase("killall")) {
                if (sender instanceof Player && !sender.hasPermission("randomlootchest.killall")) {
                   sender.sendMessage("§cKhông đủ quyền hạn.");
-                  handled = true;
-                  return false;
+                   return false;
                }
 
                this.le.killallchests();
@@ -278,8 +268,7 @@ public class CommandManager implements CommandExecutor {
             } else if (args[0].equalsIgnoreCase("forcespawn")) {
                if (!sender.hasPermission("randomlootchest.forcespawn")) {
                   sender.sendMessage("§cKhông đủ quyền hạn.");
-                  handled = true;
-                  return false;
+                   return false;
                }
 
                this.gc.spawnchest();
@@ -287,8 +276,7 @@ public class CommandManager implements CommandExecutor {
             } else if (args[0].equalsIgnoreCase("rndtime")) {
                if (!sender.hasPermission("randomlootchest.rndtime")) {
                   sender.sendMessage("§cKhông đủ quyền hạn.");
-                  handled = true;
-                  return false;
+                   return false;
                }
 
                Main.pl.randomizeRandomChestsTimeLeft();
@@ -298,8 +286,7 @@ public class CommandManager implements CommandExecutor {
             } else if (args[0].equalsIgnoreCase("addchest")) {
                if (!sender.hasPermission("randomlootchest.fixedchest")) {
                   sender.sendMessage("§cKhông đủ quyền hạn.");
-                  handled = true;
-                  return false;
+                   return false;
                }
 
                player = (Player)sender;
@@ -308,8 +295,7 @@ public class CommandManager implements CommandExecutor {
             } else if (args[0].equalsIgnoreCase("delchest")) {
                if (!sender.hasPermission("randomlootchest.fixedchest")) {
                   sender.sendMessage("§cKhông đủ quyền hạn.");
-                  handled = true;
-                  return false;
+                   return false;
                }
 
                player = (Player)sender;
@@ -326,7 +312,7 @@ public class CommandManager implements CommandExecutor {
 
                while(var7.hasNext()) {
                   Entry<Location, Integer> kv = (Entry)var7.next();
-                  Location location = (Location)kv.getKey();
+                  Location location = kv.getKey();
                   if (Main.isFixedChestType(location)) {
                      Inventory inventory = Main.getInventory(location);
                      if (inventory != null) {
@@ -346,15 +332,13 @@ public class CommandManager implements CommandExecutor {
          if (!(sender instanceof Player)) {
             player1 = (ConsoleCommandSender)sender;
             this.sendconsolehelp(player1);
-            handled = true;
-            return false;
+             return false;
          }
 
          player = (Player)sender;
          if (!player.hasPermission("randomlootchest.additem")) {
             player.sendMessage("§cKhông đủ quyền hạn.");
-            handled = true;
-            return false;
+             return false;
          }
 
          this.itg.openGui(player);

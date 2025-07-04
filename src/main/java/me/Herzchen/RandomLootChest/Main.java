@@ -126,7 +126,7 @@ public class Main extends JavaPlugin implements Listener {
       return isRandomChestType(location.getBlock());
    }
 
-   public class WandListener implements Listener {
+   public static class WandListener implements Listener {
       @EventHandler
       public void onPlayerInteract(PlayerInteractEvent e) {
          Player player = e.getPlayer();
@@ -188,7 +188,7 @@ public class Main extends JavaPlugin implements Listener {
       }
    }
 
-   public class QuitListener implements Listener {
+   public static class QuitListener implements Listener {
       @EventHandler
       public void onPlayerQuit(PlayerQuitEvent e) {
          selections.remove(e.getPlayer().getUniqueId());

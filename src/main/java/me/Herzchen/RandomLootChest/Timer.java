@@ -1,8 +1,10 @@
 package me.Herzchen.RandomLootChest;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
 
@@ -10,8 +12,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 class Timer {
    static Timer instance = new Timer();
@@ -28,52 +28,47 @@ class Timer {
    }
 
    boolean loadChests() {
-      Iterator var1 = this.chests().getKeys(true).iterator();
+      ConfigurationSection chestsSection = this.chests();
+      if (chestsSection == null) return true;
 
-      int x;
-      int z;
-      while(var1.hasNext()) {
-         String s = (String)var1.next();
-         if (!s.contains(".")) {
-            World world = Main.getWorld(Objects.requireNonNull(this.chests().getConfigurationSection(s)).getString("World"));
-            if (world == null) {
-               return false;
-            }
+      for (String s : chestsSection.getKeys(false)) {
+         ConfigurationSection chestSection = chestsSection.getConfigurationSection(s);
+         if (chestSection == null) continue;
 
-             Objects.requireNonNull(this.chests().getConfigurationSection(s)).getInt("X");
-             int y = Objects.requireNonNull(this.chests().getConfigurationSection(s)).getInt("Y");
-            x = Objects.requireNonNull(this.chests().getConfigurationSection(s)).getInt("Z");
-            Location loc = new Location(world, (double)x, (double)y, (double)x);
-            z = Objects.requireNonNull(this.chests().getConfigurationSection(s)).getInt("TimeToDelete");
-            String block = Objects.requireNonNull(this.chests().getConfigurationSection(s)).getString("Block", "AIR");
-            Main.pl.RandomChests.put(loc, new RandomChestInfo(z, block));
-            this.chests().set(s, (Object)null);
-         }
+         World world = Main.getWorld(chestSection.getString("World"));
+         if (world == null) continue;
+
+         int x = chestSection.getInt("X");
+         int y = chestSection.getInt("Y");
+         int z = chestSection.getInt("Z");
+         Location loc = new Location(world, x, y, z);
+
+         int timeToDelete = chestSection.getInt("TimeToDelete");
+         String block = chestSection.getString("Block", "AIR");
+
+         Main.pl.RandomChests.put(loc, new RandomChestInfo(timeToDelete, block));
+         chestsSection.set(s, null);
       }
 
-      ConfigurationSection section = this.data.data.getConfigurationSection("FixedChests");
-      if (section != null) {
-         Iterator var12 = ((Set)section.getKeys(true).stream().filter((xx) -> {
-            return !xx.contains(".");
-         }).collect(Collectors.toSet())).iterator();
+      ConfigurationSection fixedSection = this.data.data.getConfigurationSection("FixedChests");
+      if (fixedSection != null) {
+         for (String key : fixedSection.getKeys(false)) {
+            ConfigurationSection chestData = fixedSection.getConfigurationSection(key);
+            if (chestData == null) continue;
 
-         while(var12.hasNext()) {
-            String key = (String)var12.next();
-            ConfigurationSection data = section.getConfigurationSection(key);
-            World world = Main.getWorld(Objects.requireNonNull(data).getString("World"));
-            if (world == null) {
-               return false;
-            }
+            World world = Main.getWorld(chestData.getString("World"));
+            if (world == null) continue;
 
-            x = data.getInt("X");
-            int y = data.getInt("Y");
-            z = data.getInt("Z");
-            int time = data.getInt("TimeLeft");
-            Location location = new Location(world, (double)x, (double)y, (double)z);
+            int x = chestData.getInt("X");
+            int y = chestData.getInt("Y");
+            int z = chestData.getInt("Z");
+            Location location = new Location(world, x, y, z);
+
             if (Main.isFixedChestType(location)) {
-               Main.pl.FixedChests.put(location, time);
+               int timeLeft = chestData.getInt("TimeLeft");
+               Main.pl.FixedChests.put(location, timeLeft);
             } else {
-               section.set(key, (Object)null);
+               fixedSection.set(key, null);
             }
          }
       }

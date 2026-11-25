@@ -13,8 +13,19 @@
 # | /rlc togglebreak | Cho phép phá rương ngẫu nhiên                           | randomlootchest.togglebreak |
 # | /rlc forcespawn  | Tạo rương ngẫu nhiên ngay lập tức                       | randomlootchest.forcespawn  |
 # | /rlc rndtime     | Ngẫu nhiên hóa thời gian tồn tại của rương              | randomlootchest.rndtime     |
+# | /rlc chesttypes  | Xem danh sách loại rương                                | randomlootchest.chesttypes  |
+# | /rlc resettimer [random/fixedchest] | Reset thời gian cho loại rương cụ thể (random/fixedchest/cả hai) | randomlootchest.resettimer  |
+# | /rlc reload      | Reload config, database, regions                        | randomlootchest.reload      |
+# | /rlc loottable   | Xem danh sách items + tỷ lệ                             | randomlootchest.reload      |
+# | /rlc roll        | Mô phỏng roll 1 lần fill loot                           | randomlootchest.loottable   |
+# | /rlc regions     | Xem danh sách region                                    | randomlootchest.reload      |
+# | /rlc regions     | Xem danh sách region                                    | randomlootchest.reload      |
 # +------------------+---------------------------------------------------------+-----------------------------+
 ########################################################################################################################
+# | /rlc spawn chesttype x1,y1,z1 x2,y2,z2 [world] [số lượng] | Spawn rương trong khu vực |
+# [world] optional: nếu là player thực thi thì lấy world player đang ở, nếu là console thực thi thì bắt buộc phải có
+# [số lượng] optional: nếu không có tham số thì fallback về 1
+
 
 ########################################################################################################################
 ### Tùy chọn chung
@@ -38,14 +49,8 @@ SpawnChestPerTime: 10
 KillChest: true
 # Thời gian trước khi rương biến mất (giây)
 KillChestAfterTime: 60
-# Thông báo khi không được phép phá rương
-NotAbleToBreakAchest: "&cBạn không thể phá rương loot!"
-# Để trống để tắt thông báo
-MessageOnSpawn: "&6&l--------------------------------------\n&crương đã xuất hiện tại &ax: &6{X} &ay: &6{Y} &az: &6{Z}.\n&6&l--------------------------------------"
-# Để trống để tắt thông báo
-MessageOnLoot: "&6&l--------------------------------------\n&4{Player} &cđã loot rương tại &ax: &6{X} &ay: &6{Y} &az: &6{Z}.\n&6&l--------------------------------------"
-# Để trống để tắt thông báo
-MessageOnKill: "&6&l--------------------------------------\n&4rương tại &ax: &6{X} &ay: &6{Y} &az: &6{Z} &4đã biến mất!\n&6&l--------------------------------------"
+# Các message (thông báo spawn/loot/kill, không phá rương, tiêu đề inventory)
+# đã được chuyển sang file messages.yml. Chỉnh sửa ở đó.
 # lệnh thực thi khi người chơi mở rương
 CommandsToExecuteOnLoot:
   - eco give {player} 100
@@ -55,6 +60,57 @@ RandomChestEffect: MOBSPAWNER_FLAMES
 RandomChestSound: NONE
 # Âm thanh khi mở rương
 RandomChestOpenSound: CHEST_OPEN|BLOCK_CHEST_OPEN
+
+########################################################################################################################
+### Vùng xuất hiện rương (Regions)
+########################################################################################################################
+# Mỗi region có:
+# - world: Tên thế giới
+# - bounds: Giới hạn tọa độ (x_min, x_max, y_min, y_max, z_min, z_max)
+# - chestTypes: Danh sách loại rương xuất hiện trong vùng
+#
+# Nếu không cấu hình Regions, plugin sẽ dùng các thông số
+# LargestDinctance_X, SmallestDinctance_X,... (global) như cũ.
+#
+# Lưu ý: Khi có Regions, mỗi lần spawn sẽ spawn 1 rương cho mỗi region,
+# thay vì chỉ 1 rương global.
+#
+# Ví dụ:
+#Regions:
+#  overworld_main:
+#    world: "world"
+#    bounds:
+#      x_min: -100
+#      x_max: 100
+#      z_min: -100
+#      z_max: 100
+#    chestTypes:
+#      - default
+#      - iron
+#  # Nếu không chỉ định chestTypes, dùng tất cả loại có sẵn
+#  # chestTypes: []
+#  # Nếu chỉ muốn 1 loại:
+#  # chestTypes:
+#  #   - iron
+########################################################################################################################
+
+########################################################################################################################
+### Loại rương (Chest Types) - HỖ TRỢ NHIỀU LOẠI RƯƠNG
+########################################################################################################################
+# Plugin hiện hỗ trợ nhiều loại rương khác nhau, mỗi loại có:
+# - Vật liệu (material) khác nhau (CHEST, TRAPPED_CHEST, SHULKER_BOX...)
+# - Phần thưởng riêng (loot table riêng trong database.yml)
+# - Hiệu ứng và âm thanh riêng
+# - Thời gian tồn tại riêng
+#
+# Các loại rương được cấu hình trong database.yml dưới mục ChestTypes
+# Mỗi loại rương có loot table riêng trong ItemDatabase.<id_loai>
+#
+# Lệnh quản lý:
+# /rlc chesttypes - Xem danh sách loại rương
+# /rlc resettimer [random/fixedchest] <loại> - Reset timer cho loại rương cụ thể (random/fixedchest/cả hai)
+# /rlc additem - Mở GUI thêm vật phẩm (chọn global hoặc cho từng loại rương)
+########################################################################################################################
 
 ########################################################################################################################
 ### Điều kiện xuất hiện rương. CẢNH BÁO! THAY ĐỔI CÓ THỂ GÂY LỖI
@@ -77,13 +133,11 @@ RandomChestOpenSound: CHEST_OPEN|BLOCK_CHEST_OPEN
 # "Vật liệu phải trong suốt và không phải đường ray hoặc cây non"
 ########################################################################################################################
 # Điều kiện khối bị thay thế
-SpawnBlockCondition: "AIR,SNOW,CARPET"
+SpawnBlockCondition: "AIR,SNOW"
 # Điều kiện khối bên dưới
-UnderBlockCondition: "!_TRANSPARENT_,!WATER,!STATIONARY_WATER,!LAVA,!STATIONARY_LAVA,!SOIL,!GRASS_PATH"
+UnderBlockCondition: "!_TRANSPARENT_,!WATER,!LAVA,!FARMLAND,!DIRT_PATH"
 # Điều kiện khối xung quanh
-SideBlockCondition: "!CACTUS"
-
-########################################################################################################################
+SideBlockCondition: "!CACTUS"#########################################################################################################
 ### rương vị trí cố định
 ########################################################################################################################
 # Khoảng thời gian cập nhật inventory (ngẫu nhiên giữa Min/Max, giây)
@@ -97,8 +151,9 @@ FixedChestSound: DIG_GRASS|BLOCK_GRASS_BREAK
 ########################################################################################################################
 ### Giao diện kho đồ (GUI)
 ########################################################################################################################
-Inventory_Name: "&cChúc mừng!"
+# Inventory_Name đã chuyển sang messages.yml (chest.inventory_name)
 Inventory_Slots: 27
+# Số item mỗi rương (MẶC ĐỊNH) — chỉ áp dụng khi chest type không set itemCountMin/Max trong chesttypes.yml
 ItemAmountToAdd: 5
 NotificationInterval: 300 # Thời gian chống spam (giây)
 ########################################################################################################################
@@ -121,4 +176,4 @@ NotificationInterval: 300 # Thời gian chống spam (giây)
 ########################################################################################################################
 ### Bật plugin sau khi cấu hình hoàn tất
 ########################################################################################################################
-EnablePlugin: false
+EnablePlugin: true

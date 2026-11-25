@@ -1,4 +1,4 @@
-package me.Herzchen.RandomLootChest;
+package me.Herzchen.RandomLootChest.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -19,13 +19,7 @@ public class EffectWrapper {
    static {
       String serverVersion = Bukkit.getBukkitVersion();
       String mainVersion = serverVersion.split("-")[0];
-      int majorVersion = Integer.parseInt(mainVersion.split("\\.")[0]);
       int minorVersion = Integer.parseInt(mainVersion.split("\\.")[1]);
-      int patchVersion = 0;
-      if (mainVersion.split("\\.").length > 2) {
-         patchVersion = Integer.parseInt(mainVersion.split("\\.")[2]);
-      }
-
       IS_NEW_API = (minorVersion >= 13);
       PARTICLE_MAPPINGS.put("COLOURED_DUST", "REDSTONE");
       PARTICLE_MAPPINGS.put("EXPLOSION", IS_NEW_API ? "POOF" : "EXPLOSION_NORMAL");
@@ -49,7 +43,6 @@ public class EffectWrapper {
       PARTICLE_MAPPINGS.put("VOID_FOG", "UNDERWATER");
       PARTICLE_MAPPINGS.put("WATERDRIP", "DRIPPING_WATER");
       PARTICLE_MAPPINGS.put("WITCH_MAGIC", "WITCH");
-
       if (IS_NEW_API) {
          PARTICLE_MAPPINGS.put("EXPLOSION_NORMAL", "POOF");
          PARTICLE_MAPPINGS.put("REDSTONE", "DUST");
@@ -69,68 +62,41 @@ public class EffectWrapper {
             if (IS_NEW_API) {
                world.spawnParticle(particle, center, 50, 0.1, 0.1, 0.1, 0.05);
             } else {
-               switch (particle.name()) {
-                  case "REDSTONE":
-                     break;
-                  default:
-                     world.spawnParticle(particle, center, 50, 0.1, 0.1, 0.1, 0.05);
-               }
+               world.spawnParticle(particle, center, 50, 0.1, 0.1, 0.1, 0.05);
             }
          };
-      } else if (effect instanceof Effect) {
-         Effect eff = (Effect) effect;
-         this.play = location -> location.getWorld().playEffect(location, eff, 1);
+      } else if (effect instanceof Effect eff) {
+          this.play = location -> location.getWorld().playEffect(location, eff, 1);
       }
    }
 
-   void play(Location location) {
-      if (this.play != null) {
-         this.play.accept(location);
-      }
+   public void play(Location location) {
+      if (this.play != null) this.play.accept(location);
    }
 
    public static EffectWrapper create(String effectName, EffectWrapper defaultValue, Function<String, EffectWrapper> notFound) {
-      if (effectName == null || effectName.trim().isEmpty()) {
-         return defaultValue;
-      }
-
+      if (effectName == null || effectName.trim().isEmpty()) return defaultValue;
       String[] parts = effectName.split("[\\s|;,]+");
       for (String part : parts) {
          String name = part.toUpperCase().trim();
-         if (name.equals("NONE")) {
-            return null;
-         }
-
+         if (name.equals("NONE")) return null;
          String mappedName = PARTICLE_MAPPINGS.getOrDefault(name, name);
-
-         try {
-            return new EffectWrapper(Particle.valueOf(mappedName));
-         } catch (IllegalArgumentException e1) {
+         try { return new EffectWrapper(Particle.valueOf(mappedName)); }
+         catch (IllegalArgumentException e1) {
             if (!IS_NEW_API) {
-               try {
-                  Effect effect = Effect.valueOf(mappedName);
-                  if (effect.getType() != Effect.Type.SOUND) {
-                     return new EffectWrapper(effect);
-                  }
-               } catch (IllegalArgumentException e2) {
-               }
+               try { Effect effect = Effect.valueOf(mappedName);
+                  if (effect.getType() != Effect.Type.SOUND) return new EffectWrapper(effect);
+               } catch (IllegalArgumentException e2) {}
             }
          }
       }
-
       return notFound != null ? notFound.apply(effectName) : null;
    }
 
-   public static EffectWrapper create(String effectName, Function<String, EffectWrapper> notFound) {
-      return create(effectName, null, notFound);
-   }
+   public static EffectWrapper create(String effectName, Function<String, EffectWrapper> notFound) { return create(effectName, null, notFound); }
 
    public static EffectWrapper createNotNull(String effectName, EffectWrapper defaultValue, Function<String, EffectWrapper> notFound) {
       EffectWrapper effect = create(effectName, defaultValue, notFound);
-      return effect != null ? effect : new EffectWrapper((Object) null);
-   }
-
-   public static EffectWrapper createNotNull(String effectName, Function<String, EffectWrapper> notFound) {
-      return createNotNull(effectName, null, notFound);
+      return effect != null ? effect : new EffectWrapper(null);
    }
 }

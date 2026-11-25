@@ -1,0 +1,235 @@
+########################################################################################################################
+### TẤT CẢ message của plugin tập trung ở đây.
+### Hỗ trợ MiniMessage (https://docs.advntr.dev/minimessage/format.html) và mã legacy '&' .
+### Placeholder dùng dạng {Tên} - ví dụ {X}, {Y}, {Z}, {Player}, {loai}, {so_luong}...
+### Để tắt một message broadcast, đặt giá trị rỗng (ví dụ: chest.spawn: "")
+########################################################################################################################
+
+# Tiền tố tùy chọn (hiện chưa tự ghép vào các message, giữ lại để dùng sau nếu muốn).
+prefix: "<dark_red>[RandomLootChest] "
+
+# ===================== Message chung =====================
+general:
+  no_permission: "<red>Không đủ quyền."
+  no_permission_general: "<red>Không đủ quyền hạn."
+  player_only: "<red>Chỉ người chơi được dùng"
+  unknown_command: "<red>Lệnh không tồn tại! Sử dụng <yellow>/rlc <red>để xem trợ giúp."
+  chest_type_not_found: "<red>Không tìm thấy loại rương <yellow>{loai}<red>!"
+
+# ===================== Message rương / loot =====================
+chest:
+  # Broadcast khi rương ngẫu nhiên xuất hiện. {X} {Y} {Z} = tọa độ. Để trống để tắt.
+  spawn: |-
+    <gold><bold>--------------------------------------</bold>
+    <red>rương đã xuất hiện tại <green>x: <gold>{X} <green>y: <gold>{Y} <green>z: <gold>{Z}.
+    <gold><bold>--------------------------------------</bold>
+  # Broadcast khi người chơi loot rương. {X} {Y} {Z} {Player}
+  loot: |-
+    <gold><bold>--------------------------------------</bold>
+    <dark_red>{Player} <red>đã loot rương tại <green>x: <gold>{X} <green>y: <gold>{Y} <green>z: <gold>{Z}.
+    <gold><bold>--------------------------------------</bold>
+  # Broadcast khi rương biến mất. {X} {Y} {Z}
+  kill: |-
+    <gold><bold>--------------------------------------</bold>
+    <dark_red>rương tại <green>x: <gold>{X} <green>y: <gold>{Y} <green>z: <gold>{Z} <dark_red>đã biến mất!
+    <gold><bold>--------------------------------------</bold>
+  # Tiêu đề inventory loot
+  inventory_name: "<red>Chúc mừng!"
+  # Khi người chơi cố phá rương mà không được phép
+  cannot_break: "<red>Bạn không thể phá rương loot!"
+  # Khi người chơi có quyền phá được 1 rương ngẫu nhiên
+  broke_random: "<green>Bạn đã phá được 1 hòm thính"
+  # Khi người chơi có quyền xóa 1 rương cố định bằng cách phá
+  broke_fixed: "<green>rương cố định đã bị xóa khỏi bộ sưu tập"
+  # Khi người chơi cố đặt block tại ô có RLC chest
+  cannot_place: "<red>Không thể đặt block tại vị trí RLC Chest!"
+
+# ===================== Wand (que chọn vùng) =====================
+wand:
+  received: "<green>Bạn đã nhận được que wand!"
+  no_permission: "<red>Không đủ quyền!"
+  pos1_set: "<green>Đã đặt pos1 tại: <white>{loc}"
+  pos2_set: "<green>Đã đặt pos2 tại: <white>{loc}"
+
+# ===================== Đợi chọn rương (/rlc addchest) =====================
+wait:
+  countdown: "<green>Bạn còn <white>{giay} <green>giây để nhấn chuột phải vào rương <white>=O"
+  timeout: "<red>Hết thời gian. Bạn đã quá chậm <white>=("
+  cancelled: "<red>Đã hủy <gray>fo_O"
+
+# ===================== Các lệnh /rlc =====================
+command:
+  # --- Trợ giúp ---
+  help_header: "<dark_red>*-----<red><bold>RandomLootChest</bold><dark_red>*-----*"
+  help_commands: "<red><bold>Lệnh:</bold>"
+  help_line_additem: "<red><yellow>/rlc additem <gray>(Mở GUI thêm vật phẩm - chọn loại rương)"
+  help_line_addchest: "<red><yellow>/rlc addchest [tên] <gray>(Có tên: thêm rương cố định theo tên khi nhấn phải chuô vào rương có sẵn hoặc vùng đã set; không: tạo loại ruương)"
+  help_line_addchesttype: "<red><yellow>/rlc addchesttype [tên] <gray>(Có tên: thêm rương cố định theo tên; không: tạo loại ruương)"
+  help_line_delchest: "<red><yellow>/rlc delchest <gray>(Xóa rương cố định)"
+  help_line_delall: "<red><yellow>/rlc delall <gray>(Xóa tất cả rương cố định)"
+  help_line_killall: "<red><yellow>/rlc killall <gray>(Xóa tất cả rương ngẫu nhiên)"
+  help_line_togglebreak: "<red><yellow>/rlc togglebreak <gray>(Bật/tắt chế độ phá rương)"
+  help_line_forcespawn: "<red><yellow>/rlc forcespawn <gray>(Tạo rương ngẫu nhiên)"
+  help_line_rndtime: "<red><yellow>/rlc rndtime <gray>(Ngẫu nhiên hóa thời gian)"
+  help_line_wand: "<red><yellow>/rlc wand <gray>(Nhận que wand)"
+  help_line_set: "<red><yellow>/rlc set [loại] <gray>(Set rương trong vùng, mặc định default)"
+  help_line_unset: "<red><yellow>/rlc unset <gray>(Unset rương trong vùng)"
+  help_line_chesttypes: "<red><yellow>/rlc chesttypes <gray>(Danh sách loại rương)"
+  help_line_chesttypeinfo: "<red><yellow>/rlc chesttypeinfo <italic>loại</italic> <gray>(Xem chi tiết loại rương)"
+  help_line_delchesttype: "<red><yellow>/rlc delchesttype <italic>loại</italic> <gray>(Xóa loại rương)"
+  help_line_resettimer: "<red><yellow>/rlc resettimer [random/fixedchest] <gray><italic>loại</italic> <gray>(Reset timer)"
+  help_line_reload: "<red><yellow>/rlc reload <gray>(Reload config, chest types, database)"
+  help_line_spawn: "<red><yellow>/rlc spawn <gray><italic>loại</italic> <italic>x1,y1,z1</italic> <italic>x2,y2,z2</italic> [world] [số lượng] <gray>(Spawn rương trong khu vực)"
+  help_line_spawnregion: "<red><yellow>/rlc spawnregion <gray><italic>loại</italic> <italic>regionId</italic> [số lượng] <gray>(Spawn rương trong region)"
+  help_line_loottable: "<red><yellow>/rlc loottable <gray><italic>loại</italic> <gray>(Xem danh sách items + tỷ lệ)"
+  help_line_regions: "<red><yellow>/rlc regions <gray>(Xem danh sách region)"
+  help_footer: "<dark_red>*-----<red><bold>RandomLootChest</bold><dark_red>*-----*"
+
+  console_help_header: "<dark_red>*-----<red><bold>RandomLootChest</bold><dark_red>*-----* <red><bold>Lệnh Console:</bold>"
+  console_help_footer: "<dark_red>*-----*"
+
+  # --- addchest ---
+  addchest_select_no_region: "<red>Vui lòng chọn vùng bằng wand!"
+  addchest_set_count: "<green>Đã set {so_luong} rương loại <yellow>{loai}<green>!"
+  addchest_set_count_no_type: "<green>Đã set {so_luong} rương!"
+  addchest_already: "<yellow>{so_luong} đã là RLC chest!"
+  addchest_all_already: "<yellow>Tất cả {so_luong} rương đã là RLC chest!"
+  addchest_none_found: "<yellow>Không tìm thấy rương nào!"
+
+  # --- unset ---
+  unset_done: "<green>Đã unset {so_luong} RLC chest!"
+  unset_normal: "<yellow>{so_luong} rương thường"
+  unset_none_with_normal: "<yellow>Không có RLC chest nào! ({so_luong} rương thường)"
+  unset_none: "<yellow>Không tìm thấy rương nào!"
+
+  # --- togglebreak ---
+  togglebreak_off: "<gold>Đã tắt chế độ phá rương <red>Tắt!"
+  togglebreak_on: "<gold>Đã bật chế độ phá rương <green>Bật!"
+
+  # --- killall / delall ---
+  killall_done: "<green>Đã xóa tất cả rương!"
+  delall_done: "<green>Đã xóa toàn bộ rương cố định!"
+
+  # --- rndtime ---
+  rndtime_done: "<yellow>Đã ngẫu nhiên hóa thời gian."
+
+  # --- addchest / addchesttype ---
+  addchest_wait_started: "<green>Đang chờ bạn chọn rương..."
+  addchesttype_exists: "<red>Loại rương <yellow>{loai}<red> đã tồn tại!"
+  addchesttype_created: "<green>Đã thêm loại rương <yellow>{loai}<green>! Chỉnh sửa trong chesttypes.yml để cấu hình chi tiết."
+
+  # --- chesttypes (danh sách) ---
+  chesttypes_header: "<dark_red>*-----<gold>Loại Rương</gold><dark_red>*-----*"
+  chesttypes_line: "<red>- <gold>{loai} <gray>({vat_lieu})"
+  chesttypes_footer: "<dark_red>*--------------------------*"
+
+  # --- chesttypeinfo ---
+  chesttypeinfo_header: "<dark_red>*-----<gold>{loai}</gold><dark_red>*-----*"
+  chesttypeinfo_name: "<gray>Tên: <white>{ten}"
+  chesttypeinfo_material: "<gray>Vật liệu: <white>{vat_lieu}"
+  chesttypeinfo_spawn_time: "<gray>Thời gian spawn: <white>{min} - {max} giây"
+  chesttypeinfo_kill_time: "<gray>Thời gian kill: <white>{thoi_gian} giây"
+  chesttypeinfo_spawn_effect: "<gray>Hiệu ứng spawn: <white>{gia_tri}"
+  chesttypeinfo_spawn_sound: "<gray>Âm thanh spawn: <white>{gia_tri}"
+  chesttypeinfo_open_sound: "<gray>Âm thanh mở: <white>{gia_tri}"
+  chesttypeinfo_kill_effect: "<gray>Hiệu ứng kill: <white>{gia_tri}"
+  chesttypeinfo_kill_sound: "<gray>Âm thanh kill: <white>{gia_tri}"
+  chesttypeinfo_loot_table: "<gray>Loot table riêng: <white>{gia_tri}"
+
+  # --- delchesttype ---
+  delchesttype_usage: "<red>Sử dụng: <yellow>/rlc delchesttype <italic>loại</italic>"
+  delchesttype_cannot_default: "<red>Không thể xóa loại rương mặc định!"
+  delchesttype_done: "<green>Đã xóa loại rương <yellow>{loai}<green>!"
+
+  # --- resettimer ---
+  resettimer_usage: "<red>Sử dụng: <yellow>/rlc resettimer [random/fixedchest] <italic>loại</italic>"
+  resettimer_done: "<green>Đã reset timer cho {random} rương ngẫu nhiên và {fixed} rương cố định loại <yellow>{loai}<green>!"
+  resettimer_done_random: "<green>Đã reset timer cho {random} rương ngẫu nhiên loại <yellow>{loai}<green>!"
+  resettimer_done_fixed: "<green>Đã reset timer cho {fixed} rương cố định loại <yellow>{loai}<green>!"
+
+  # --- reload ---
+  reload_done: "<green>Đã reload config, chest types và database!"
+
+  # --- spawn ---
+  spawn_usage: "<red>Sử dụng: <yellow>/rlc spawn <italic>loại</italic> <italic>x1,y1,z1</italic> <italic>x2,y2,z2</italic> [world] [số lượng]"
+  spawn_bad_coords: "<red>Tọa độ không hợp lệ! Định dạng: x,y,z"
+  spawn_world_not_found: "<red>Không tìm thấy world <yellow>{ten}<red>!"
+  spawn_console_needs_world: "<red>Console cần chỉ định world!"
+  spawn_done: "<green>Đã spawn {da_spawn}/{yeu_cau} rương loại <yellow>{loai}<green>!"
+
+  # --- spawnregion ---
+  spawnregion_usage: "<red>Sử dụng: <yellow>/rlc spawnregion <italic>loại</italic> <italic>regionId</italic> [số lượng]"
+  spawnregion_not_found: "<red>Không tìm thấy region <yellow>{ten}<red>!"
+  spawnregion_done: "<green>Đã spawn {da_spawn}/{yeu_cau} rương loại <yellow>{loai}<green> trong region <yellow>{region}<green>!"
+
+  # --- loottable ---
+  loottable_usage: "<red>Sử dụng: <yellow>/rlc loottable [reset] <italic>loại</italic>"
+  loottable_header: "<dark_red>*-----<gold>Items: {loai}</gold><dark_red>*-----*"
+  loottable_global_note: "<gray>Loại rương này dùng global items."
+  loottable_line: "<white>- {vat_lieu} x{so_luong} <gray>(Tỷ lệ: {ty_le})"
+  loottable_footer: "<dark_red>*-------------------------------*"
+  loottable_reset_done: "<green>Đã reset loot table cho '<yellow>{loai}<green>'!"
+
+  # --- roll ---
+  roll_header: "<dark_red>*-----<gold>Roll: {loai}</gold><dark_red>*-----*"
+  roll_line: "<white>{st}) {vat_lieu} x{so_luong}"
+  roll_empty: "<gray>(Không có item nào được roll — loot table rỗng?)"
+  roll_footer: "<dark_red>*-------------------------------*"
+
+  # --- regions ---
+  regions_empty: "<yellow>Không có region nào được cấu hình. Đang dùng chế độ global (dựa trên Largest/SmallestDinctance)."
+  regions_header: "<dark_red>*-----<gold>Vùng xuất hiện rương (Regions)</gold><dark_red>*-----*"
+  regions_line: "<red>- <gold>{region} <gray>({world}) <gray>[{x1},{y1},{z1} -> {x2},{y2},{z2}]"
+  regions_types: "<gray>  Loại rương: <white>{cac_loai}"
+  regions_footer: "<dark_red>*------------------------------------*"
+
+  # --- chesttypeinfo usage (dùng chung cho một số lệnh cần <loại>) ---
+  chesttypeinfo_usage: "<red>Sử dụng: <yellow>/rlc chesttypeinfo <italic>loại</italic>"
+
+# ===================== ItemAdderGui - chỉ feedback qua chat =====================
+gui:
+  selected_global: "<green>Đã chọn: <white>Global Items"
+  selected_type: "<green>Đã chọn: <white>{ten}"
+  items_updated: "<green>Danh sách vật phẩm đã được cập nhật!"
+  settings_saved: "<green>Đã lưu cài đặt cho loại rương '<yellow>{loai}<green>'!"
+  settings_global_denied: "<red>Cài đặt loại rương chỉ áp dụng cho chest type riêng — không áp dụng cho global."
+  settings_vanilla_invalid: "<red>vanillaTable '<white>{bang}<red>' không tìm thấy trên server — sẽ bị bỏ qua!"
+  settings_vanilla_cleared: "<green>Đã tắt vanillaTable."
+  page_full: "<red>Vui lòng điền đầy trang này trước khi chuyển sang trang tiếp theo."
+  chance_prompt: "<yellow>Nhập tỷ lệ mới (1-100) cho vật phẩm này: <white>(ESC để hủy)"
+  chance_out_of_range: "<red>Tỷ lệ phải từ 1 đến 100!"
+  chance_set: "<green>Đã đặt tỷ lệ thành: <white>{ty_le}"
+  chance_invalid_number: "<red>Số không hợp lệ! Vui lòng nhập lại."
+  chance_too_high: "<red>Tỷ lệ không thể lớn hơn 100!"
+  chance_too_low: "<red>Tỷ lệ không thể nhỏ hơn 1!"
+  amount_out_of_range: "<red>Số lượng phải từ 1 đến 99!"
+  amount_set: "<green>Đã đặt số lượng thành: <white>{so_luong}"
+  cancelled: "<yellow>Đã hủy."
+  fixed_added: "<green>rương cố định đã được thêm vào bộ sưu tập <white>=)"
+  fixed_add_error: "<red>Có gì đó không ổn <white>=("
+  fixed_removed: "<green>rương cố định đã bị xóa khỏi bộ sưu tập <white>=)"
+
+# ===================== Console =====================
+console:
+  enabled_line1: "<red>==================== <gold>RandomLootChest <red>==================="
+  enabled_line2: "<green>==<white>                  PLUGIN ĐÃ ĐƯỢC BẬT            <green>=="
+  enabled_line3: "<green>==<white>            MỌI VẤN ĐỀ XIN LIÊN HỆ DISCORD      <green>=="
+  enabled_line4: "<green>==<white>                   itztli_herzchen              <green>=="
+  enabled_line5: "<red>============================<red>============================"
+
+  pause: "<white>Tạm dừng {giay} giây ..."
+
+  db_error_line1: "<red>============== <aqua>RandomLootChest LỖI <red>================"
+  db_error_line2: "<red>==<yellow>         LỖI KHI ĐỌC CƠ SỞ DỮ LIỆU            <red>=="
+  db_error_line3: "<red>==<yellow>        SỬA HOẶC XÓA DATABASE.YML           <red>=="
+  db_error_line4: "<red>========================<red>============================="
+
+  config_warning_line1: "<red>============= <aqua>RandomLootChest CẢNH BÁO <red>==============="
+  config_warning_line2: "<red>==<yellow>     THIẾU HOẶC THỪA TÙY CHỌN TRONG CONFIG.YML      <red>=="
+  config_warning_line3: "<red>==<yellow> VUI LÒNG CHUYỂN TÙY CHỌN TỪ CONFIG_EXAMPLE.YML <red>=="
+  config_warning_line4: "<red>========================<red>============================="
+
+  disabled_line1: "<red>================= <aqua>RandomLootChest <red>==================="
+  disabled_line2: "<red>==<yellow>               PLUGIN ĐÃ BỊ TẮT                  <red>=="
+  disabled_line3: "<red>==<yellow>     BẠN CẦN CẤU HÌNH NÓ. XEM CONFIG.YML    <red>=="
+  disabled_line4: "<red>========================<red>============================="

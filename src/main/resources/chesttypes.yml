@@ -1,0 +1,73 @@
+# ========================================
+# Cấu hình loại rương (Chest Types)
+# ========================================
+# Mỗi loại rương có:
+# - material: Loại khối (CHEST, TRAPPED_CHEST, BARREL, SHULKER_BOX...)
+#   Chỉ nên dùng khối CHỨA ĐƯỢC ĐỒ — khối khác sẽ bị cảnh báo khi load và
+#   rương spawn ra sẽ không có item. Với BARREL nên đặt openSound: BLOCK_BARREL_OPEN
+# - displayName: Tên hiển thị
+# - spawnTimeMin/Max: Thời gian giữa các lần spawn (giây)
+# - killTime: Thời gian tồn tại (giây)
+# - spawnEffect: Hiệu ứng khi spawn
+# - spawnSound: Âm thanh khi spawn
+# - openSound: Âm thanh khi mở
+# - killEffect: Hiệu ứng khi biến mất
+# - killSound: Âm thanh khi biến mất
+# - itemCountMin/itemCountMax: SỐ ITEM TRONG RƯƠNG (tùy chọn)
+#     + Set cả hai   → random trong khoảng [itemCountMin, itemCountMax]
+#     + Chỉ set Min  → số item cố định bằng itemCountMin
+#     + Chỉ set Max  → random trong khoảng [1, itemCountMax]
+#     + Không set gì → dùng ItemAmountToAdd trong config.yml
+# - uniquePicks: true → không cho 2 item giống nhau trong cùng 1 rương (mặc định false)
+# - vanillaTable: Roll thêm item từ loot table VANILLA của server (tùy chọn)
+#     ví dụ: chests/simple_dungeon, chests/buried_treasure, chests/nether_bridge
+#     (viết "minecraft:chests/simple_dungeon" cũng được). Item vanilla spawn RA KHỎI
+#     số itemCountMin/Max — dùng kèm lootTable/item global vẫn được.
+# - nothingChance: % mỗi pick custom bị bỏ qua, 0-100 (tùy chọn) → rương có lúc thưa
+# - mergeStacks: true → gộp các pick cùng loại thành 1 stack (tùy chọn)
+# - enchant-roll: đặt trong database.yml CHO TỪNG item (GUI chỉ đọc/không sửa):
+#     enchant-roll:
+#       - {ench: SHARPNESS, min: 1, max: 5}
+#     → mỗi lần pick sẽ roll level ngẫu nhiên trong [min, max]
+#   💡 Các key itemCountMin/Max, uniquePicks, mergeStacks, nothingChance, vanillaTable
+#   chỉnh được TRONG GAME: /rlc additem → chọn loại rương → nút "Cài đặt loại rương"
+# - lootTable: Đường dẫn đến loot table trong ItemDatabase (tùy chọn)
+#   Nếu để trống, sẽ dùng item global từ database.yml
+#   (GUI /rlc additem sẽ tự điền key này khi lưu item cho loại rương)
+#
+# Các loại rương mặc định:
+# ========================================
+
+default:
+  material: CHEST
+  displayName: "Rương Mặc Định"
+  spawnTimeMin: 10
+  spawnTimeMax: 20
+  killTime: 60
+  spawnEffect: MOBSPAWNER_FLAMES
+  spawnSound: NONE
+  openSound: CHEST_OPEN|BLOCK_CHEST_OPEN
+  killEffect: EXPLOSION
+  killSound: DIG_GRASS|BLOCK_GRASS_BREAK
+  # itemCountMin: 5
+  # itemCountMax: 8
+  # uniquePicks: false
+
+dungeon:
+  material: TRAPPED_CHEST
+  displayName: "Rương Dungeon"
+  spawnTimeMin: 30
+  spawnTimeMax: 60
+  killTime: 120
+  spawnEffect: EXPLOSION
+  spawnSound: BLOCK_ANVIL_LAND
+  openSound: BLOCK_CHEST_OPEN
+  killEffect: EXPLOSION
+  killSound: BLOCK_ANVIL_BREAK
+  lootTable: ItemDatabase.dungeon
+  # itemCountMin: 4
+  # itemCountMax: 6
+  # uniquePicks: true
+  # vanillaTable: chests/simple_dungeon
+  # nothingChance: 15
+  # mergeStacks: false

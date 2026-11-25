@@ -13,7 +13,6 @@ permissions:
       randomlootchest.general: true
       randomlootchest.additem: true
       randomlootchest.fixedchest: true
-      randomlootchest.delall: true
       randomlootchest.killall: true
       randomlootchest.togglebreak: true
       randomlootchest.forcespawn: true
@@ -21,6 +20,13 @@ permissions:
       randomlootchest.wand: true
       randomlootchest.set: true
       randomlootchest.unset: true
+      randomlootchest.chesttypes: true
+      randomlootchest.resettimer: true
+      randomlootchest.reload: true
+      randomlootchest.regions: true
+      randomlootchest.spawn: true
+      randomlootchest.spawnregion: true
+      randomlootchest.loottable: true
 
   randomlootchest.general:
     description: Access to general commands
@@ -28,8 +34,6 @@ permissions:
     description: Access to additem command
   randomlootchest.fixedchest:
     description: Access to add/del chest commands
-  randomlootchest.delall:
-    description: Access to delall command
   randomlootchest.killall:
     description: Access to killall command
   randomlootchest.togglebreak:
@@ -44,6 +48,20 @@ permissions:
     description: Access to set command
   randomlootchest.unset:
     description: Access to unset command
+  randomlootchest.chesttypes:
+    description: Access to chesttypes command
+  randomlootchest.resettimer:
+    description: Access to resettimer command
+  randomlootchest.reload:
+    description: Access to reload command
+  randomlootchest.regions:
+    description: Access to regions command
+  randomlootchest.spawn:
+    description: Access to spawn command
+  randomlootchest.spawnregion:
+    description: Access to spawnregion command
+  randomlootchest.loottable:
+    description: Access to loottable command
 
 commands:
   rlc:
